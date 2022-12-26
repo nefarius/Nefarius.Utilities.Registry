@@ -16,6 +16,22 @@ namespace Nefarius.Utilities.Registry
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public class RegFileObject
     {
+        #region Constructors
+
+        /// <summary>
+        ///     New instance of <see cref="RegFileObject" />.
+        /// </summary>
+        /// <param name="regFileName">The full path to the file to parse.</param>
+        public RegFileObject(string regFileName)
+        {
+            _path = regFileName;
+            FileName = Path.GetFileName(_path);
+            RegValues = new Dictionary<string, Dictionary<string, RegValueObject>>();
+            Read();
+        }
+
+        #endregion
+
         #region Private Fields
 
         /// <summary>
@@ -53,33 +69,12 @@ namespace Nefarius.Utilities.Registry
         /// <summary>
         ///     Gets the dictionary containing all entries
         /// </summary>
-        public Dictionary<String, Dictionary<string, RegValueObject>> RegValues { get; }
+        public Dictionary<string, Dictionary<string, RegValueObject>> RegValues { get; }
 
         /// <summary>
         ///     Gets or sets the encoding schema of the reg file (UTF8 or Default)
         /// </summary>
-        public string Encoding { get; set; }
-
-        #endregion
-
-        #region Constructors
-
-        public RegFileObject()
-        {
-            _path = "";
-            FileName = "";
-            Encoding = "UTF8";
-            RegValues = new Dictionary<String, Dictionary<string, RegValueObject>>();
-        }
-
-        public RegFileObject(string RegFileName)
-        {
-            _path = RegFileName;
-            FileName = Path.GetFileName(_path);
-            Encoding = "UTF8";
-            RegValues = new Dictionary<String, Dictionary<string, RegValueObject>>();
-            Read();
-        }
+        public Encoding FileEncoding { get; private set; } = Encoding.UTF8;
 
         #endregion
 
@@ -96,9 +91,9 @@ namespace Nefarius.Utilities.Registry
             }
 
             _content = File.ReadAllText(_path);
-            Encoding = GetEncoding();
+            FileEncoding = GetEncoding();
 
-            Dictionary<String, Dictionary<String, String>> normalizedContent = null;
+            Dictionary<string, Dictionary<string, string>> normalizedContent = null;
             try
             {
                 normalizedContent = ParseFile();
@@ -121,7 +116,7 @@ namespace Nefarius.Utilities.Registry
                 {
                     try
                     {
-                        regValueList.Add(item.Key, new RegValueObject(entry.Key, item.Key, item.Value, Encoding));
+                        regValueList.Add(item.Key, new RegValueObject(entry.Key, item.Key, item.Value, FileEncoding));
                     }
                     catch (Exception ex)
                     {
@@ -180,8 +175,6 @@ namespace Nefarius.Utilities.Registry
             string searchPattern = "^[\t ]*\\[.+\\][\r\n]+";
             MatchCollection matches = Regex.Matches(content, searchPattern, RegexOptions.Multiline);
 
-            int startIndex = 0;
-            int lengthIndex = 0;
             Dictionary<string, string> dictKeys = new Dictionary<string, string>();
 
             foreach (Match match in matches)
@@ -206,9 +199,9 @@ namespace Nefarius.Utilities.Registry
                     sKey = sKey == "@" ? "" : StripeLeadingChars(sKey, "\"");
 
                     //Retrieve value
-                    startIndex = match.Index + match.Length;
+                    int startIndex = match.Index + match.Length;
                     Match nextMatch = match.NextMatch();
-                    lengthIndex = (nextMatch.Success ? nextMatch.Index : content.Length) - startIndex;
+                    int lengthIndex = (nextMatch.Success ? nextMatch.Index : content.Length) - startIndex;
                     string sValue = content.Substring(startIndex, lengthIndex);
                     //Removing the ending CR
                     //change suggested by Jenda27
@@ -222,15 +215,15 @@ namespace Nefarius.Utilities.Registry
                     //dictKeys.Add(sKey, sValue);
                     if (dictKeys.ContainsKey(sKey))
                     {
-                        string tmpcontent = dictKeys[sKey];
-                        StringBuilder tmpsb = new StringBuilder(tmpcontent);
-                        if (!tmpcontent.EndsWith(Environment.NewLine))
+                        string key = dictKeys[sKey];
+                        StringBuilder sb = new StringBuilder(key);
+                        if (!key.EndsWith(Environment.NewLine))
                         {
-                            tmpsb.AppendLine();
+                            sb.AppendLine();
                         }
 
-                        tmpsb.Append(sValue);
-                        dictKeys[sKey] = tmpsb.ToString();
+                        sb.Append(sValue);
+                        dictKeys[sKey] = sb.ToString();
                     }
                     else
                     {
@@ -251,7 +244,7 @@ namespace Nefarius.Utilities.Registry
         /// </summary>
         /// <param name="input">The content string to be parsed</param>
         /// <returns>A Dictionary with retrieved keys and remaining content</returns>
-        private Dictionary<string, string> NormalizeValuesDictionary(string input)
+        private static Dictionary<string, string> NormalizeValuesDictionary(string input)
         {
             const string searchPattern = @"^[\t ]*("".+""|@)=(""[^""]*""|[^""]+)";
             MatchCollection matches = Regex.Matches(input, searchPattern, RegexOptions.Multiline);
@@ -283,15 +276,15 @@ namespace Nefarius.Utilities.Registry
 
                     if (dictKeys.ContainsKey(sKey))
                     {
-                        string tmpcontent = dictKeys[sKey];
-                        StringBuilder tmpsb = new StringBuilder(tmpcontent);
-                        if (!tmpcontent.EndsWith(Environment.NewLine))
+                        string key = dictKeys[sKey];
+                        StringBuilder sb = new StringBuilder(key);
+                        if (!key.EndsWith(Environment.NewLine))
                         {
-                            tmpsb.AppendLine();
+                            sb.AppendLine();
                         }
 
-                        tmpsb.Append(sValue);
-                        dictKeys[sKey] = tmpsb.ToString();
+                        sb.Append(sValue);
+                        dictKeys[sKey] = sb.ToString();
                     }
                     else
                     {
@@ -316,13 +309,13 @@ namespace Nefarius.Utilities.Registry
         /// <remarks></remarks>
         private static string StripeLeadingChars(string sLine, string leadChar)
         {
-            string tmpvalue = sLine.Trim();
-            if (tmpvalue.StartsWith(leadChar) & tmpvalue.EndsWith(leadChar))
+            string value = sLine.Trim();
+            if (value.StartsWith(leadChar) & value.EndsWith(leadChar))
             {
-                return tmpvalue.Substring(1, tmpvalue.Length - 2);
+                return value.Substring(1, value.Length - 2);
             }
 
-            return tmpvalue;
+            return value;
         }
 
         /// <summary>
@@ -333,24 +326,24 @@ namespace Nefarius.Utilities.Registry
         /// <remarks></remarks>
         private static string StripeBraces(string line)
         {
-            string tmpvalue = line.Trim();
-            if (tmpvalue.StartsWith("[") & tmpvalue.EndsWith("]"))
+            string value = line.Trim();
+            if (value.StartsWith("[") & value.EndsWith("]"))
             {
-                return tmpvalue.Substring(1, tmpvalue.Length - 2);
+                return value.Substring(1, value.Length - 2);
             }
 
-            return tmpvalue;
+            return value;
         }
 
         /// <summary>
         ///     Retrieves the encoding of the reg file, checking the word "REGEDIT4"
         /// </summary>
         /// <returns></returns>
-        private string GetEncoding()
+        private Encoding GetEncoding()
         {
             return Regex.IsMatch(_content, "([ ]*(\r\n)*)REGEDIT4", RegexOptions.IgnoreCase | RegexOptions.Singleline)
-                ? "ANSI"
-                : "UTF8";
+                ? Encoding.Default
+                : Encoding.UTF8;
         }
 
         #endregion

@@ -26,7 +26,7 @@ namespace Nefarius.Utilities.Registry
         /// <summary>
         ///     Overloaded constructor
         /// </summary>
-        public RegValueObject(string regKeyName, string regValueName, string regValueData, string encoding)
+        internal RegValueObject(string regKeyName, string regValueName, string regValueData, Encoding encoding)
         {
             _parentKey = regKeyName.Trim();
             _parentKeyWithoutRoot = _parentKey;
@@ -108,6 +108,9 @@ namespace Nefarius.Utilities.Registry
             set => _value = value;
         }
 
+        /// <summary>
+        ///     Parent key without root.
+        /// </summary>
         [XmlElement("value", typeof(string))]
         public string ParentKeyWithoutRoot
         {
@@ -187,7 +190,7 @@ namespace Nefarius.Utilities.Registry
         /// <param name="sTextLine">Registry value row string</param>
         /// <param name="textEncoding">The encoding.</param>
         /// <returns>Value</returns>
-        private string GetRegEntryType(ref string sTextLine, String textEncoding)
+        private string GetRegEntryType(ref string sTextLine, Encoding textEncoding)
         {
             if (sTextLine.StartsWith("hex(a):"))
             {
@@ -310,18 +313,15 @@ namespace Nefarius.Utilities.Registry
         /// <summary>
         ///     Removes the leading and ending characters from the given string
         /// </summary>
-        /// <param name="line">given string</param>
-        /// <returns>edited string</returns>
-        /// <remarks></remarks>
         private string StripeLeadingChars(string line, string leadChar)
         {
-            string tmpvalue = line.Trim();
-            if (tmpvalue.StartsWith(leadChar) & tmpvalue.EndsWith(leadChar))
+            string value = line.Trim();
+            if (value.StartsWith(leadChar) & value.EndsWith(leadChar))
             {
-                return tmpvalue.Substring(1, tmpvalue.Length - 2);
+                return value.Substring(1, value.Length - 2);
             }
 
-            return tmpvalue;
+            return value;
         }
 
         /// <summary>
@@ -332,13 +332,13 @@ namespace Nefarius.Utilities.Registry
         /// <remarks></remarks>
         private string StripeBraces(string line)
         {
-            string tmpvalue = line.Trim();
-            if (tmpvalue.StartsWith("[") & tmpvalue.EndsWith("]"))
+            string value = line.Trim();
+            if (value.StartsWith("[") & value.EndsWith("]"))
             {
-                return tmpvalue.Substring(1, tmpvalue.Length - 2);
+                return value.Substring(1, value.Length - 2);
             }
 
-            return tmpvalue;
+            return value;
         }
 
         /// <summary>
@@ -349,16 +349,13 @@ namespace Nefarius.Utilities.Registry
         /// <remarks></remarks>
         private string StripeContinueChar(string line)
         {
-            string tmpString = Regex.Replace(line, "\\\\\r\n[ ]*", string.Empty);
-            return tmpString;
+            return Regex.Replace(line, "\\\\\r\n[ ]*", string.Empty);
         }
 
         /// <summary>
         ///     Converts the byte arrays (saved as array of string) into string
         /// </summary>
-        /// <param name="stringArray">Array of string</param>
-        /// <returns>String value</returns>
-        private string GetStringRepresentation(IReadOnlyList<string> stringArray, string encoding)
+        private string GetStringRepresentation(IReadOnlyList<string> stringArray, Encoding encoding)
         {
             if (stringArray.Count <= 1)
             {
@@ -367,7 +364,7 @@ namespace Nefarius.Utilities.Registry
 
             StringBuilder sb = new StringBuilder();
 
-            if (encoding == "UTF8")
+            if (Equals(encoding, Encoding.UTF8))
             {
                 for (int i = 0; i < stringArray.Count - 2; i += 2)
                 {
