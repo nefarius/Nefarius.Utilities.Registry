@@ -32,6 +32,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RegFileParser\RegFileParser.csproj" />
+    <ProjectReference Include="..\RegFileParser\Nefarius.Utilities.Registry.csproj" />
   </ItemGroup>
 </Project>
