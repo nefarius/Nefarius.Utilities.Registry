@@ -185,6 +185,7 @@ namespace RegFileParser
         ///     Retrieves the reg value type, parsing the prefix of the value
         /// </summary>
         /// <param name="sTextLine">Registry value row string</param>
+        /// <param name="textEncoding">The encoding.</param>
         /// <returns>Value</returns>
         private string GetRegEntryType(ref string sTextLine, String textEncoding)
         {

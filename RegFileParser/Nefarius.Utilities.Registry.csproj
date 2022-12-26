@@ -10,6 +10,8 @@
     <Version>1.0.0</Version>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <PackageLicenseExpression>CPOL</PackageLicenseExpression>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
