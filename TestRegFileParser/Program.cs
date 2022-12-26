@@ -46,16 +46,16 @@ internal class Program
 
         try
         {
-            RegFileObject regfile = new(args[0]);
+            RegFile regfile = new(args[0]);
             Console.WriteLine("Reg file has been imported.");
 
             //For proofing purpose generate new txt file with imported content
             Int32 count = 0;
             StringBuilder sb = new();
-            foreach (KeyValuePair<String, Dictionary<String, RegValueObject>> entry in regfile.RegValues)
+            foreach (KeyValuePair<String, Dictionary<String, RegValue>> entry in regfile.RegValues)
             {
                 sb.AppendLine($@"[{entry.Key}]");
-                foreach (KeyValuePair<String, RegValueObject> item in entry.Value)
+                foreach (KeyValuePair<String, RegValue> item in entry.Value)
                 {
                     if (String.IsNullOrEmpty(item.Value.Entry))
                     {

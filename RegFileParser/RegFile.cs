@@ -10,23 +10,23 @@ namespace Nefarius.Utilities.Registry
     /// <summary>
     ///     The main reg file parsing class.
     ///     Reads the given reg file and stores the content as
-    ///     a Dictionary of registry keys and values as a Dictionary of registry values <see cref="RegValueObject" />
+    ///     a Dictionary of registry keys and values as a Dictionary of registry values <see cref="RegValue" />
     /// </summary>
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    public class RegFileObject
+    public class RegFile
     {
         #region Constructors
 
         /// <summary>
-        ///     New instance of <see cref="RegFileObject" />.
+        ///     New instance of <see cref="RegFile" />.
         /// </summary>
         /// <param name="regFileName">The full path to the file to parse.</param>
-        public RegFileObject(string regFileName)
+        public RegFile(string regFileName)
         {
             _path = regFileName;
             FileName = Path.GetFileName(_path);
-            RegValues = new Dictionary<string, Dictionary<string, RegValueObject>>();
+            RegValues = new Dictionary<string, Dictionary<string, RegValue>>();
             Read();
         }
 
@@ -69,7 +69,7 @@ namespace Nefarius.Utilities.Registry
         /// <summary>
         ///     Gets the dictionary containing all entries
         /// </summary>
-        public Dictionary<string, Dictionary<string, RegValueObject>> RegValues { get; }
+        public Dictionary<string, Dictionary<string, RegValue>> RegValues { get; }
 
         /// <summary>
         ///     Gets or sets the encoding schema of the reg file (UTF8 or Default)
@@ -110,13 +110,13 @@ namespace Nefarius.Utilities.Registry
 
             foreach (KeyValuePair<string, Dictionary<string, string>> entry in normalizedContent)
             {
-                Dictionary<string, RegValueObject> regValueList = new Dictionary<string, RegValueObject>();
+                Dictionary<string, RegValue> regValueList = new Dictionary<string, RegValue>();
 
                 foreach (KeyValuePair<string, string> item in entry.Value)
                 {
                     try
                     {
-                        regValueList.Add(item.Key, new RegValueObject(entry.Key, item.Key, item.Value, FileEncoding));
+                        regValueList.Add(item.Key, new RegValue(entry.Key, item.Key, item.Value, FileEncoding));
                     }
                     catch (Exception ex)
                     {

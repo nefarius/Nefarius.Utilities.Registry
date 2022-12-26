@@ -6,8 +6,11 @@ using System.Xml.Serialization;
 
 namespace Nefarius.Utilities.Registry
 {
+    /// <summary>
+    ///     A registry value.
+    /// </summary>
     [Serializable]
-    public class RegValueObject
+    public class RegValue
     {
         private string _entry;
         private string _parentKey;
@@ -19,14 +22,14 @@ namespace Nefarius.Utilities.Registry
         /// <summary>
         ///     Parameter-less constructor
         /// </summary>
-        public RegValueObject()
+        public RegValue()
         {
         }
 
         /// <summary>
         ///     Overloaded constructor
         /// </summary>
-        internal RegValueObject(string regKeyName, string regValueName, string regValueData, Encoding encoding)
+        internal RegValue(string regKeyName, string regValueName, string regValueData, Encoding encoding)
         {
             _parentKey = regKeyName.Trim();
             _parentKeyWithoutRoot = _parentKey;
@@ -187,9 +190,6 @@ namespace Nefarius.Utilities.Registry
         /// <summary>
         ///     Retrieves the reg value type, parsing the prefix of the value
         /// </summary>
-        /// <param name="sTextLine">Registry value row string</param>
-        /// <param name="textEncoding">The encoding.</param>
-        /// <returns>Value</returns>
         private string GetRegEntryType(ref string sTextLine, Encoding textEncoding)
         {
             if (sTextLine.StartsWith("hex(a):"))
@@ -327,9 +327,6 @@ namespace Nefarius.Utilities.Registry
         /// <summary>
         ///     Removes the leading and ending parenthesis from the given string
         /// </summary>
-        /// <param name="line">given string</param>
-        /// <returns>edited string</returns>
-        /// <remarks></remarks>
         private string StripeBraces(string line)
         {
             string value = line.Trim();
@@ -344,9 +341,6 @@ namespace Nefarius.Utilities.Registry
         /// <summary>
         ///     Removes the ending backslashes from the given string
         /// </summary>
-        /// <param name="line">given string</param>
-        /// <returns>edited string</returns>
-        /// <remarks></remarks>
         private string StripeContinueChar(string line)
         {
             return Regex.Replace(line, "\\\\\r\n[ ]*", string.Empty);
