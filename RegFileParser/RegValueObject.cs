@@ -4,7 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
-namespace RegFileParser
+namespace Nefarius.Utilities.Registry
 {
     [Serializable]
     public class RegValueObject

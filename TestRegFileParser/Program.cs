@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-using RegFileParser;
+using Nefarius.Utilities.Registry;
 
 namespace TestRegFileParser;
 

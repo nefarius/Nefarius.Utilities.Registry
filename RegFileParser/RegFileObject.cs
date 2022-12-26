@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace RegFileParser
+namespace Nefarius.Utilities.Registry
 {
     /// <summary>
     ///     The main reg file parsing class.
