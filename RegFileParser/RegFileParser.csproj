@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ProductVersion>8.0.30703</ProductVersion>
     <ProjectGuid>{E0431CB7-5D8B-4B53-9C30-4F5C031ED6B5}</ProjectGuid>
-    <TargetFramework>net35</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyTitle>RegFileParser</AssemblyTitle>
     <Company>HFDev</Company>
     <Product>RegFileParser</Product>
