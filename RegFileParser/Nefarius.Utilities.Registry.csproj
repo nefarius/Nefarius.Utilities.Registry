@@ -7,11 +7,25 @@
     <Product>Registry Export File (.reg) Parser</Product>
     <Description>A class to read and parse reg files.</Description>
     <Copyright>Copyright © HFDev 2010, Benjamin Höglinger-Stelzer 2022</Copyright>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <PackageLicenseExpression>CPOL-1.02</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageIcon>NSS-128x128.png</PackageIcon>
+    <PackageIconUrl />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\assets\NSS-128x128.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
