@@ -125,7 +125,7 @@ namespace Nefarius.Utilities.Registry
 
         #region Private Functions
 
-        private string GetHive(ref string subKey)
+        private static string GetHive(ref string subKey)
         {
             string tmpLine = subKey.Trim();
 
@@ -190,7 +190,7 @@ namespace Nefarius.Utilities.Registry
         /// <summary>
         ///     Retrieves the reg value type, parsing the prefix of the value
         /// </summary>
-        private string GetRegEntryType(ref string sTextLine, Encoding textEncoding)
+        private static string GetRegEntryType(ref string sTextLine, Encoding textEncoding)
         {
             if (sTextLine.StartsWith("hex(a):"))
             {
@@ -253,7 +253,7 @@ namespace Nefarius.Utilities.Registry
             return "REG_SZ";
         }
 
-        private string SetRegEntryType(string sRegDataType)
+        private static string SetRegEntryType(string sRegDataType)
         {
             switch (sRegDataType)
             {
@@ -313,7 +313,7 @@ namespace Nefarius.Utilities.Registry
         /// <summary>
         ///     Removes the leading and ending characters from the given string
         /// </summary>
-        private string StripeLeadingChars(string line, string leadChar)
+        private static string StripeLeadingChars(string line, string leadChar)
         {
             string value = line.Trim();
             if (value.StartsWith(leadChar) & value.EndsWith(leadChar))
@@ -327,7 +327,7 @@ namespace Nefarius.Utilities.Registry
         /// <summary>
         ///     Removes the leading and ending parenthesis from the given string
         /// </summary>
-        private string StripeBraces(string line)
+        private static string StripeBraces(string line)
         {
             string value = line.Trim();
             if (value.StartsWith("[") & value.EndsWith("]"))
@@ -341,7 +341,7 @@ namespace Nefarius.Utilities.Registry
         /// <summary>
         ///     Removes the ending backslashes from the given string
         /// </summary>
-        private string StripeContinueChar(string line)
+        private static string StripeContinueChar(string line)
         {
             return Regex.Replace(line, "\\\\\r\n[ ]*", string.Empty);
         }
@@ -349,7 +349,7 @@ namespace Nefarius.Utilities.Registry
         /// <summary>
         ///     Converts the byte arrays (saved as array of string) into string
         /// </summary>
-        private string GetStringRepresentation(IReadOnlyList<string> stringArray, Encoding encoding)
+        private static string GetStringRepresentation(IReadOnlyList<string> stringArray, Encoding encoding)
         {
             if (stringArray.Count <= 1)
             {
