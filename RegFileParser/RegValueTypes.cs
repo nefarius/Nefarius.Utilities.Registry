@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -111,6 +112,6 @@ public sealed class RegValueType : SmartEnum<RegValueType>
     /// <returns>A <see cref="RegValueType" /> or null.</returns>
     public static RegValueType FromEncodedType(string encodedType)
     {
-        return AllTypes.FirstOrDefault(t => encodedType.StartsWith(t.EncodedType));
+        return AllTypes.FirstOrDefault(t => encodedType.StartsWith(t.EncodedType, StringComparison.OrdinalIgnoreCase));
     }
 }
