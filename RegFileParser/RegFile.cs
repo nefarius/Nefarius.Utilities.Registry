@@ -107,10 +107,17 @@ public class RegFile
                 {
                     RegValueType type = RegValueType.FromEncodedType(item.Value);
 
-                    type.When(RegValueType.Dword).Then(() => regValueList.Add(item.Key,
+                    type
+                        // DWORD
+                        .When(RegValueType.Dword).Then(() => regValueList.Add(item.Key,
                             new RegValueDword(entry.Key, item.Key, type, item.Value, FileEncoding)))
+                        // QWORD
+                        .When(RegValueType.Qword).Then(() => regValueList.Add(item.Key,
+                            new RegValueQword(entry.Key, item.Key, type, item.Value, FileEncoding)))
+                        // Binary
                         .When(RegValueType.Binary).Then(() => regValueList.Add(item.Key,
                             new RegValueBinary(entry.Key, item.Key, type, item.Value, FileEncoding)))
+                        // Fallback (value will remain string type)
                         .Default(() => regValueList.Add(item.Key,
                             new RegValue(entry.Key, item.Key, type, item.Value, FileEncoding)));
                 }
