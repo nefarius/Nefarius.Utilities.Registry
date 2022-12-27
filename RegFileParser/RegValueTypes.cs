@@ -112,6 +112,9 @@ public sealed class RegValueType : SmartEnum<RegValueType>
     /// <returns>A <see cref="RegValueType" /> or null.</returns>
     public static RegValueType FromEncodedType(string encodedType)
     {
-        return AllTypes.FirstOrDefault(t => encodedType.StartsWith(t.EncodedType, StringComparison.OrdinalIgnoreCase));
+        return AllTypes.FirstOrDefault(t => encodedType
+            .TrimStart()
+            .StartsWith(t.EncodedType, StringComparison.OrdinalIgnoreCase)
+        );
     }
 }
