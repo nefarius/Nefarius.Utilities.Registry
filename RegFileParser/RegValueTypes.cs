@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 using Ardalis.SmartEnum;
 
@@ -8,6 +10,7 @@ namespace Nefarius.Utilities.Registry;
 ///     Represents possible data types of a <see cref="RegValue" />.
 /// </summary>
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public sealed class RegValueType : SmartEnum<RegValueType>
 {
     /// <summary>
@@ -77,6 +80,21 @@ public sealed class RegValueType : SmartEnum<RegValueType>
     /// </summary>
     public static readonly RegValueType Sz = new("REG_SZ", 1);
 
+    private static readonly List<RegValueType> AllTypes = new()
+    {
+        ResourceRequirementsList,
+        FullResourceDescriptor,
+        ResourceList,
+        Qword,
+        Dword,
+        MultiSz,
+        Link,
+        ExpandSz,
+        None,
+        Binary,
+        Sz
+    };
+
     private RegValueType(string name, int value) : base(name, value)
     {
     }
@@ -85,4 +103,14 @@ public sealed class RegValueType : SmartEnum<RegValueType>
     ///     Gets the encoded string for the type.
     /// </summary>
     public string EncodedType { get; private set; }
+
+    /// <summary>
+    ///     Retrieves a <see cref="RegValueType" /> from an encoded value string.
+    /// </summary>
+    /// <param name="encodedType">The encoded value string from the parser.</param>
+    /// <returns>A <see cref="RegValueType" /> or null.</returns>
+    public static RegValueType FromEncodedType(string encodedType)
+    {
+        return AllTypes.FirstOrDefault(t => encodedType.StartsWith(t.EncodedType));
+    }
 }
