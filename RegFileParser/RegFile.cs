@@ -14,9 +14,18 @@ namespace Nefarius.Utilities.Registry;
 /// </summary>
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 public class RegFile
 {
-    #region Constructors
+    /// <summary>
+    ///     Raw content of the reg file
+    /// </summary>
+    private string _content;
+
+    /// <summary>
+    ///     The full path of the reg file to be imported
+    /// </summary>
+    private string _path;
 
     /// <summary>
     ///     New instance of <see cref="RegFile" />.
@@ -30,23 +39,6 @@ public class RegFile
         Read();
     }
 
-    #endregion
-
-    #region Private Fields
-
-    /// <summary>
-    ///     The full path of the reg file to be imported
-    /// </summary>
-    private string _path;
-
-    /// <summary>
-    ///     Raw content of the reg file
-    /// </summary>
-    private string _content;
-
-    #endregion
-
-    #region Public Properties
 
     /// <summary>
     ///     Gets or sets the full path of the reg file
@@ -76,9 +68,6 @@ public class RegFile
     /// </summary>
     public Encoding FileEncoding { get; private set; } = Encoding.UTF8;
 
-    #endregion
-
-    #region Private Methods
 
     /// <summary>
     ///     Imports the reg file
@@ -169,7 +158,7 @@ public class RegFile
     /// </summary>
     /// <param name="content">The content string to be parsed</param>
     /// <returns>A Dictionary with retrieved keys and remaining content</returns>
-    private static Dictionary<String, String> NormalizeKeysDictionary(String content)
+    internal static Dictionary<String, String> NormalizeKeysDictionary(String content)
     {
         string searchPattern = "^[\t ]*\\[.+\\][\r\n]+";
         MatchCollection matches = Regex.Matches(content, searchPattern, RegexOptions.Multiline);
@@ -243,7 +232,7 @@ public class RegFile
     /// </summary>
     /// <param name="input">The content string to be parsed</param>
     /// <returns>A Dictionary with retrieved keys and remaining content</returns>
-    private static Dictionary<string, string> NormalizeValuesDictionary(string input)
+    internal static Dictionary<string, string> NormalizeValuesDictionary(string input)
     {
         const string searchPattern = @"^[\t ]*("".+""|@)=(""[^""]*""|[^""]+)";
         MatchCollection matches = Regex.Matches(input, searchPattern, RegexOptions.Multiline);
@@ -306,7 +295,7 @@ public class RegFile
     /// <param name="leadChar"></param>
     /// <returns>edited string</returns>
     /// <remarks></remarks>
-    private static string StripeLeadingChars(string sLine, string leadChar)
+    internal static string StripeLeadingChars(string sLine, string leadChar)
     {
         string value = sLine.Trim();
         if (value.StartsWith(leadChar) & value.EndsWith(leadChar))
@@ -323,7 +312,7 @@ public class RegFile
     /// <param name="line">given string</param>
     /// <returns>edited string</returns>
     /// <remarks></remarks>
-    private static string StripeBraces(string line)
+    internal static string StripeBraces(string line)
     {
         string value = line.Trim();
         if (value.StartsWith("[") & value.EndsWith("]"))
@@ -344,6 +333,4 @@ public class RegFile
             ? Encoding.Default
             : Encoding.UTF8;
     }
-
-    #endregion
 }
