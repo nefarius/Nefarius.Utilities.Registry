@@ -27,7 +27,7 @@ public class RegValue
         Entry = regValueName;
         Value = regValueData;
         string tmpStringValue = Value;
-        Type = GetRegEntryType(ref tmpStringValue, encoding);
+        Type = GetAndStripRegEntryType(ref tmpStringValue, encoding);
         Value = tmpStringValue;
     }
 
@@ -148,7 +148,7 @@ public class RegValue
     /// <summary>
     ///     Retrieves the reg value type, parsing the prefix of the value
     /// </summary>
-    internal static string GetRegEntryType(ref string sTextLine, Encoding textEncoding)
+    internal static string GetAndStripRegEntryType(ref string sTextLine, Encoding textEncoding)
     {
         if (sTextLine.StartsWith("hex(a):"))
         {
