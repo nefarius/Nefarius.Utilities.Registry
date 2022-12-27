@@ -1,30 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml.Serialization;
 
 namespace Nefarius.Utilities.Registry;
 
 /// <summary>
 ///     A registry value.
 /// </summary>
-[Serializable]
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public class RegValue
 {
-    private string _entry;
     private string _parentKey;
     private string _parentKeyWithoutRoot;
-    private string _root;
-    private string _type;
-    private string _value;
-
-    /// <summary>
-    ///     Parameter-less constructor
-    /// </summary>
-    public RegValue()
-    {
-    }
 
     /// <summary>
     ///     Overloaded constructor
@@ -33,28 +23,22 @@ public class RegValue
     {
         _parentKey = regKeyName.Trim();
         _parentKeyWithoutRoot = _parentKey;
-        _root = GetHive(ref _parentKeyWithoutRoot);
-        _entry = regValueName;
-        _value = regValueData;
-        string tmpStringValue = _value;
-        _type = GetRegEntryType(ref tmpStringValue, encoding);
-        _value = tmpStringValue;
+        Root = GetHive(ref _parentKeyWithoutRoot);
+        Entry = regValueName;
+        Value = regValueData;
+        string tmpStringValue = Value;
+        Type = GetRegEntryType(ref tmpStringValue, encoding);
+        Value = tmpStringValue;
     }
 
     /// <summary>
     ///     Registry value name
     /// </summary>
-    [XmlElement("entry", typeof(string))]
-    public string Entry
-    {
-        get => _entry;
-        set => _entry = value;
-    }
+    public string Entry { get; set; }
 
     /// <summary>
     ///     Registry value parent key
     /// </summary>
-    [XmlElement("key", typeof(string))]
     public string ParentKey
     {
         get => _parentKey;
@@ -62,44 +46,28 @@ public class RegValue
         {
             _parentKey = value;
             _parentKeyWithoutRoot = _parentKey;
-            _root = GetHive(ref _parentKeyWithoutRoot);
+            Root = GetHive(ref _parentKeyWithoutRoot);
         }
     }
 
     /// <summary>
     ///     Registry value root hive
     /// </summary>
-    [XmlElement("root", typeof(string))]
-    public string Root
-    {
-        get => _root;
-        set => _root = value;
-    }
+    public string Root { get; set; }
 
     /// <summary>
     ///     Registry value type
     /// </summary>
-    [XmlElement("type", typeof(string))]
-    public string Type
-    {
-        get => _type;
-        set => _type = value;
-    }
+    public string Type { get; set; }
 
     /// <summary>
     ///     Registry value data
     /// </summary>
-    [XmlElement("value", typeof(string))]
-    public string Value
-    {
-        get => _value;
-        set => _value = value;
-    }
+    public string Value { get; set; }
 
     /// <summary>
     ///     Parent key without root.
     /// </summary>
-    [XmlElement("value", typeof(string))]
     public string ParentKeyWithoutRoot
     {
         get => _parentKeyWithoutRoot;
@@ -112,7 +80,7 @@ public class RegValue
     /// <returns>An entry for the [Registry] section of the *.sig signature file</returns>
     public override string ToString()
     {
-        return $"{_parentKey}\\\\{_entry}={SetRegEntryType(_type)}{_value}";
+        return $"{_parentKey}\\\\{Entry}={SetRegEntryType(Type)}{Value}";
     }
 
     private static string GetHive(ref string subKey)
