@@ -80,7 +80,7 @@ public class RegValue
     /// <returns>An entry for the [Registry] section of the *.sig signature file</returns>
     public override string ToString()
     {
-        return $"{_parentKey}\\\\{Entry}={SetRegEntryType(Type.Name)}{Value}";
+        return $"{_parentKey}\\\\{Entry}={Type.EncodedType}{Value}";
     }
 
     private static string GetHive(ref string subKey)
@@ -211,64 +211,7 @@ public class RegValue
         
         return RegValueType.Sz;
     }
-
-    internal static string SetRegEntryType(string sRegDataType)
-    {
-        switch (sRegDataType)
-        {
-            case "REG_QWORD":
-                return "hex(b):";
-
-            case "REG_RESOURCE_REQUIREMENTS_LIST":
-                return "hex(a):";
-
-            case "REG_FULL_RESOURCE_DESCRIPTOR":
-                return "hex(9):";
-
-            case "REG_RESOURCE_LIST":
-                return "hex(8):";
-
-            case "REG_MULTI_SZ":
-                return "hex(7):";
-
-            case "REG_LINK":
-                return "hex(6):";
-
-            case "REG_DWORD":
-                return "dword:";
-
-            case "REG_EXPAND_SZ":
-                return "hex(2):";
-
-            case "REG_NONE":
-                return "hex(0):";
-
-            case "REG_BINARY":
-                return "hex:";
-
-            case "REG_SZ":
-                return null;
-
-            default:
-                return null;
-        }
-        /*
-        hex: REG_BINARY
-        hex(0): REG_NONE
-        hex(1): REG_SZ
-        hex(2): EXPAND_SZ
-        hex(3): REG_BINARY
-        hex(4): REG_DWORD
-        hex(5): REG_DWORD_BIG_ENDIAN ; invalid type ?
-        hex(6): REG_LINK
-        hex(7): REG_MULTI_SZ
-        hex(8): REG_RESOURCE_LIST
-        hex(9): REG_FULL_RESOURCE_DESCRIPTOR
-        hex(a): REG_RESOURCE_REQUIREMENTS_LIST
-        hex(b): REG_QWORD
-        */
-    }
-
+    
     /// <summary>
     ///     Removes the leading and ending characters from the given string
     /// </summary>
