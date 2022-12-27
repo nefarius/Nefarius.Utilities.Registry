@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -290,36 +289,4 @@ public class RegValue
 
         return sb.ToString();
     }
-}
-
-/// <summary>
-///     A 32-bit number.
-/// </summary>
-public sealed class RegValueDword : RegValue
-{
-    internal RegValueDword(string keyName, string valueName, RegValueType valueType, string valueData,
-        Encoding encoding) : base(keyName, valueName, valueType, valueData, encoding)
-    {
-    }
-
-    /// <summary>
-    ///     A 32-bit number.
-    /// </summary>
-    public new int Value => int.Parse(_valueData);
-}
-
-/// <summary>
-///     Binary data in any form.
-/// </summary>
-public sealed class RegValueBinary : RegValue
-{
-    internal RegValueBinary(string keyName, string valueName, RegValueType valueType, string valueData,
-        Encoding encoding) : base(keyName, valueName, valueType, valueData, encoding)
-    {
-    }
-
-    /// <summary>
-    ///     Binary data in any form.
-    /// </summary>
-    public new IEnumerable<byte> Value => _valueData.Split(',').Select(v => Convert.ToByte(v, 16));
 }
