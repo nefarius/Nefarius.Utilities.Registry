@@ -41,21 +41,6 @@ public class RegValue
         _value = tmpStringValue;
     }
 
-    #region Public Methods
-
-    /// <summary>
-    ///     Overriden Method
-    /// </summary>
-    /// <returns>An entry for the [Registry] section of the *.sig signature file</returns>
-    public override string ToString()
-    {
-        return $"{_parentKey}\\\\{_entry}={SetRegEntryType(_type)}{_value}";
-    }
-
-    #endregion
-
-    #region Public Properties
-
     /// <summary>
     ///     Registry value name
     /// </summary>
@@ -121,9 +106,14 @@ public class RegValue
         set => _parentKeyWithoutRoot = value;
     }
 
-    #endregion Public Properties
-
-    #region Private Functions
+    /// <summary>
+    ///     Overriden Method
+    /// </summary>
+    /// <returns>An entry for the [Registry] section of the *.sig signature file</returns>
+    public override string ToString()
+    {
+        return $"{_parentKey}\\\\{_entry}={SetRegEntryType(_type)}{_value}";
+    }
 
     private static string GetHive(ref string subKey)
     {
@@ -190,7 +180,7 @@ public class RegValue
     /// <summary>
     ///     Retrieves the reg value type, parsing the prefix of the value
     /// </summary>
-    private static string GetRegEntryType(ref string sTextLine, Encoding textEncoding)
+    internal static string GetRegEntryType(ref string sTextLine, Encoding textEncoding)
     {
         if (sTextLine.StartsWith("hex(a):"))
         {
@@ -253,7 +243,7 @@ public class RegValue
         return "REG_SZ";
     }
 
-    private static string SetRegEntryType(string sRegDataType)
+    internal static string SetRegEntryType(string sRegDataType)
     {
         switch (sRegDataType)
         {
@@ -313,7 +303,7 @@ public class RegValue
     /// <summary>
     ///     Removes the leading and ending characters from the given string
     /// </summary>
-    private static string StripeLeadingChars(string line, string leadChar)
+    internal static string StripeLeadingChars(string line, string leadChar)
     {
         string value = line.Trim();
         if (value.StartsWith(leadChar) & value.EndsWith(leadChar))
@@ -327,7 +317,7 @@ public class RegValue
     /// <summary>
     ///     Removes the leading and ending parenthesis from the given string
     /// </summary>
-    private static string StripeBraces(string line)
+    internal static string StripeBraces(string line)
     {
         string value = line.Trim();
         if (value.StartsWith("[") & value.EndsWith("]"))
@@ -341,7 +331,7 @@ public class RegValue
     /// <summary>
     ///     Removes the ending backslashes from the given string
     /// </summary>
-    private static string StripeContinueChar(string line)
+    internal static string StripeContinueChar(string line)
     {
         return Regex.Replace(line, "\\\\\r\n[ ]*", string.Empty);
     }
@@ -349,7 +339,7 @@ public class RegValue
     /// <summary>
     ///     Converts the byte arrays (saved as array of string) into string
     /// </summary>
-    private static string GetStringRepresentation(IReadOnlyList<string> stringArray, Encoding encoding)
+    internal static string GetStringRepresentation(IReadOnlyList<string> stringArray, Encoding encoding)
     {
         if (stringArray.Count <= 1)
         {
@@ -392,6 +382,4 @@ public class RegValue
 
         return sb.ToString();
     }
-
-    #endregion
 }
