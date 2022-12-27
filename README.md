@@ -5,3 +5,8 @@
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/nefarius/Nefarius.Utilities.Registry/dotnet.yml)
 
 Work in progress, use with care 🔥
+
+## 3rd party credits
+
+- [Registry Export File (.reg) Parser](https://www.codeproject.com/Tips/125573/Registry-Export-File-reg-Parser)
+- [SmartEnum](https://github.com/ardalis/SmartEnum)
