@@ -19,13 +19,13 @@ public class RegValue
     /// <summary>
     ///     Overloaded constructor
     /// </summary>
-    internal RegValue(string regKeyName, string regValueName, string regValueData, Encoding encoding)
+    internal RegValue(string keyName, string valueName, string valueData, Encoding encoding)
     {
-        _parentKey = regKeyName.Trim();
+        _parentKey = keyName.Trim();
         _parentKeyWithoutRoot = _parentKey;
         Root = GetHive(ref _parentKeyWithoutRoot);
-        Entry = regValueName;
-        Value = regValueData;
+        Entry = valueName;
+        Value = valueData;
         string tmpStringValue = Value;
         Type = GetAndStripRegEntryType(ref tmpStringValue, encoding);
         Value = tmpStringValue;
