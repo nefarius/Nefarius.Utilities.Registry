@@ -105,7 +105,14 @@ public class RegFile
             {
                 try
                 {
-                    regValueList.Add(item.Key, new RegValue(entry.Key, item.Key, item.Value, FileEncoding));
+                    RegValueType type = RegValueType.FromEncodedType(item.Value);
+
+                    type.When(RegValueType.Dword).Then(() => regValueList.Add(item.Key,
+                            new RegValueDword(entry.Key, item.Key, type, item.Value, FileEncoding)))
+                        .When(RegValueType.Binary).Then(() => regValueList.Add(item.Key,
+                            new RegValueBinary(entry.Key, item.Key, type, item.Value, FileEncoding)))
+                        .Default(() => regValueList.Add(item.Key,
+                            new RegValue(entry.Key, item.Key, type, item.Value, FileEncoding)));
                 }
                 catch (Exception ex)
                 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -11,30 +12,37 @@ namespace Nefarius.Utilities.Registry;
 /// </summary>
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 public class RegValue
 {
+    /// <summary>
+    ///     Value data with type stripped off.
+    /// </summary>
+    protected readonly string _valueData;
+
     private string _parentKey;
     private string _parentKeyWithoutRoot;
 
     /// <summary>
     ///     Overloaded constructor
     /// </summary>
-    internal RegValue(string keyName, string valueName, string valueData, Encoding encoding)
+    internal RegValue(string keyName, string valueName, RegValueType valueType, string valueData, Encoding encoding)
     {
         _parentKey = keyName.Trim();
         _parentKeyWithoutRoot = _parentKey;
+
         Root = GetHive(ref _parentKeyWithoutRoot);
         Entry = valueName;
-        Value = valueData;
-        string tmpStringValue = Value;
-        Type = GetAndStripRegEntryType(ref tmpStringValue, encoding);
-        Value = tmpStringValue;
+        Type = valueType;
+
+        _valueData = valueData;
+        StripRegEntryType(ref _valueData, encoding);
     }
 
     /// <summary>
     ///     Registry value name
     /// </summary>
-    public string Entry { get; set; }
+    public string Entry { get; }
 
     /// <summary>
     ///     Registry value parent key
@@ -58,12 +66,12 @@ public class RegValue
     /// <summary>
     ///     Registry value type
     /// </summary>
-    public RegValueType Type { get; set; }
+    public RegValueType Type { get; }
 
     /// <summary>
     ///     Registry value data
     /// </summary>
-    public string Value { get; set; }
+    public string Value => _valueData;
 
     /// <summary>
     ///     Parent key without root.
@@ -86,7 +94,7 @@ public class RegValue
     private static string GetHive(ref string subKey)
     {
         string tmpLine = subKey.Trim();
-        
+
         if (tmpLine.StartsWith("HKEY_LOCAL_MACHINE"))
         {
             subKey = subKey.Substring(18);
@@ -145,73 +153,61 @@ public class RegValue
         return null;
     }
 
-    /// <summary>
-    ///     Retrieves the reg value type, parsing the prefix of the value
-    /// </summary>
-    internal static RegValueType GetAndStripRegEntryType(ref string sTextLine, Encoding textEncoding)
+    internal static void StripRegEntryType(ref string line, Encoding textEncoding)
     {
-        if (sTextLine.StartsWith("hex(a):"))
+        if (line.StartsWith("hex(a):"))
         {
-            sTextLine = sTextLine.Substring(7);
-            return RegValueType.ResourceRequirementsList;
+            line = line.Substring(7);
         }
 
-        if (sTextLine.StartsWith("hex(b):"))
+        if (line.StartsWith("hex(b):"))
         {
-            sTextLine = sTextLine.Substring(7);
-            return RegValueType.Qword;
+            line = line.Substring(7);
         }
 
-        if (sTextLine.StartsWith("dword:"))
+        if (line.StartsWith("dword:"))
         {
-            sTextLine = Convert.ToInt32(sTextLine.Substring(6), 16).ToString();
-            return RegValueType.Dword;
+            line = Convert.ToInt32(line.Substring(6), 16).ToString();
         }
 
-        if (sTextLine.StartsWith("hex(7):"))
+        if (line.StartsWith("hex(7):"))
         {
-            sTextLine = StripeContinueChar(sTextLine.Substring(7));
-            sTextLine = GetStringRepresentation(sTextLine.Split(','), textEncoding);
-            return RegValueType.MultiSz;
+            line = StripeContinueChar(line.Substring(7));
+            line = GetStringRepresentation(line.Split(','), textEncoding);
         }
 
-        if (sTextLine.StartsWith("hex(6):"))
+        if (line.StartsWith("hex(6):"))
         {
-            sTextLine = StripeContinueChar(sTextLine.Substring(7));
-            sTextLine = GetStringRepresentation(sTextLine.Split(','), textEncoding);
-            return RegValueType.Link;
+            line = StripeContinueChar(line.Substring(7));
+            line = GetStringRepresentation(line.Split(','), textEncoding);
         }
 
-        if (sTextLine.StartsWith("hex(2):"))
+        if (line.StartsWith("hex(2):"))
         {
-            sTextLine = StripeContinueChar(sTextLine.Substring(7));
-            sTextLine = GetStringRepresentation(sTextLine.Split(','), textEncoding);
-            return RegValueType.ExpandSz;
+            line = StripeContinueChar(line.Substring(7));
+            line = GetStringRepresentation(line.Split(','), textEncoding);
         }
 
-        if (sTextLine.StartsWith("hex(0):"))
+        if (line.StartsWith("hex(0):"))
         {
-            sTextLine = sTextLine.Substring(7);
-            return RegValueType.None;
+            line = line.Substring(7);
         }
 
-        if (sTextLine.StartsWith("hex:"))
+        if (line.StartsWith("hex:"))
         {
-            sTextLine = StripeContinueChar(sTextLine.Substring(4));
-            if (sTextLine.EndsWith(","))
+            line = StripeContinueChar(line.Substring(4));
+            if (line.EndsWith(","))
             {
-                sTextLine = sTextLine.Substring(0, sTextLine.Length - 1);
+                line = line.Substring(0, line.Length - 1);
             }
 
-            return RegValueType.Binary;
+            return;
         }
 
-        sTextLine = Regex.Unescape(sTextLine);
-        sTextLine = StripeLeadingChars(sTextLine, "\"");
-        
-        return RegValueType.Sz;
+        line = Regex.Unescape(line);
+        line = StripeLeadingChars(line, "\"");
     }
-    
+
     /// <summary>
     ///     Removes the leading and ending characters from the given string
     /// </summary>
@@ -294,4 +290,36 @@ public class RegValue
 
         return sb.ToString();
     }
+}
+
+/// <summary>
+///     A 32-bit number.
+/// </summary>
+public sealed class RegValueDword : RegValue
+{
+    internal RegValueDword(string keyName, string valueName, RegValueType valueType, string valueData,
+        Encoding encoding) : base(keyName, valueName, valueType, valueData, encoding)
+    {
+    }
+
+    /// <summary>
+    ///     A 32-bit number.
+    /// </summary>
+    public new int Value => int.Parse(_valueData);
+}
+
+/// <summary>
+///     Binary data in any form.
+/// </summary>
+public sealed class RegValueBinary : RegValue
+{
+    internal RegValueBinary(string keyName, string valueName, RegValueType valueType, string valueData,
+        Encoding encoding) : base(keyName, valueName, valueType, valueData, encoding)
+    {
+    }
+
+    /// <summary>
+    ///     Binary data in any form.
+    /// </summary>
+    public new IEnumerable<byte> Value => _valueData.Split(',').Select(v => Convert.ToByte(v, 16));
 }
