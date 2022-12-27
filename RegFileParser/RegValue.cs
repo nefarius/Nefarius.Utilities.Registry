@@ -58,7 +58,7 @@ public class RegValue
     /// <summary>
     ///     Registry value type
     /// </summary>
-    public string Type { get; set; }
+    public RegValueType Type { get; set; }
 
     /// <summary>
     ///     Registry value data
@@ -80,7 +80,7 @@ public class RegValue
     /// <returns>An entry for the [Registry] section of the *.sig signature file</returns>
     public override string ToString()
     {
-        return $"{_parentKey}\\\\{Entry}={SetRegEntryType(Type)}{Value}";
+        return $"{_parentKey}\\\\{Entry}={SetRegEntryType(Type.Name)}{Value}";
     }
 
     private static string GetHive(ref string subKey)
@@ -148,51 +148,51 @@ public class RegValue
     /// <summary>
     ///     Retrieves the reg value type, parsing the prefix of the value
     /// </summary>
-    internal static string GetAndStripRegEntryType(ref string sTextLine, Encoding textEncoding)
+    internal static RegValueType GetAndStripRegEntryType(ref string sTextLine, Encoding textEncoding)
     {
         if (sTextLine.StartsWith("hex(a):"))
         {
             sTextLine = sTextLine.Substring(7);
-            return "REG_RESOURCE_REQUIREMENTS_LIST";
+            return RegValueType.ResourceRequirementsList;
         }
 
         if (sTextLine.StartsWith("hex(b):"))
         {
             sTextLine = sTextLine.Substring(7);
-            return "REG_QWORD";
+            return RegValueType.Qword;
         }
 
         if (sTextLine.StartsWith("dword:"))
         {
             sTextLine = Convert.ToInt32(sTextLine.Substring(6), 16).ToString();
-            return "REG_DWORD";
+            return RegValueType.Dword;
         }
 
         if (sTextLine.StartsWith("hex(7):"))
         {
             sTextLine = StripeContinueChar(sTextLine.Substring(7));
             sTextLine = GetStringRepresentation(sTextLine.Split(','), textEncoding);
-            return "REG_MULTI_SZ";
+            return RegValueType.MultiSz;
         }
 
         if (sTextLine.StartsWith("hex(6):"))
         {
             sTextLine = StripeContinueChar(sTextLine.Substring(7));
             sTextLine = GetStringRepresentation(sTextLine.Split(','), textEncoding);
-            return "REG_LINK";
+            return RegValueType.Link;
         }
 
         if (sTextLine.StartsWith("hex(2):"))
         {
             sTextLine = StripeContinueChar(sTextLine.Substring(7));
             sTextLine = GetStringRepresentation(sTextLine.Split(','), textEncoding);
-            return "REG_EXPAND_SZ";
+            return RegValueType.ExpandSz;
         }
 
         if (sTextLine.StartsWith("hex(0):"))
         {
             sTextLine = sTextLine.Substring(7);
-            return "REG_NONE";
+            return RegValueType.None;
         }
 
         if (sTextLine.StartsWith("hex:"))
@@ -203,12 +203,13 @@ public class RegValue
                 sTextLine = sTextLine.Substring(0, sTextLine.Length - 1);
             }
 
-            return "REG_BINARY";
+            return RegValueType.Binary;
         }
 
         sTextLine = Regex.Unescape(sTextLine);
         sTextLine = StripeLeadingChars(sTextLine, "\"");
-        return "REG_SZ";
+        
+        return RegValueType.Sz;
     }
 
     internal static string SetRegEntryType(string sRegDataType)

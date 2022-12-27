@@ -66,7 +66,7 @@ internal class Program
                         sb.AppendFormat("\"{0}\"=", item.Value.Entry);
                     }
 
-                    if (item.Value.Type == "REG_SZ")
+                    if (item.Value.Type == RegValueType.Sz)
                     {
                         sb.AppendLine($"\"{item.Value.Value}\"");
                     }
