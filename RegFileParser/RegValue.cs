@@ -86,7 +86,7 @@ public class RegValue
     private static string GetHive(ref string subKey)
     {
         string tmpLine = subKey.Trim();
-
+        
         if (tmpLine.StartsWith("HKEY_LOCAL_MACHINE"))
         {
             subKey = subKey.Substring(18);
