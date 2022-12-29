@@ -52,12 +52,12 @@ internal class Program
             //For proofing purpose generate new txt file with imported content
             Int32 count = 0;
             StringBuilder sb = new();
-            foreach (KeyValuePair<String, Dictionary<String, RegValue>> entry in regfile.RegValues)
+            foreach (KeyValuePair<string, Dictionary<string, RegValue>> entry in regfile.RegValues)
             {
                 sb.AppendLine($@"[{entry.Key}]");
-                foreach (KeyValuePair<String, RegValue> item in entry.Value)
+                foreach (KeyValuePair<string, RegValue> item in entry.Value)
                 {
-                    if (String.IsNullOrEmpty(item.Value.Entry))
+                    if (string.IsNullOrEmpty(item.Value.Entry))
                     {
                         sb.Append("@=");
                     }
