@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TestRegFileParser": {
+      "commandName": "Project",
+      "commandLineArgs": "\"D:\\Development\\GitHub\\Nefarius.Utilities.Bluetooth\\Dumps\\dualsense.reg\""
+    }
+  }
+}

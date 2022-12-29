@@ -15,17 +15,20 @@ namespace Nefarius.Utilities.Registry;
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
 [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-public class RegFile
+public sealed class RegFile : IDisposable
 {
-    /// <summary>
-    ///     Raw content of the reg file
-    /// </summary>
+    private readonly Stream _stream;
     private string _content;
 
     /// <summary>
-    ///     The full path of the reg file to be imported
+    ///     New instance of <see cref="RegFile" />.
     /// </summary>
-    private string _path;
+    /// <param name="stream">The stream to read from.</param>
+    public RegFile(Stream stream)
+    {
+        _stream = stream;
+        Read();
+    }
 
     /// <summary>
     ///     New instance of <see cref="RegFile" />.
@@ -33,53 +36,34 @@ public class RegFile
     /// <param name="regFileName">The full path to the file to parse.</param>
     public RegFile(string regFileName)
     {
-        _path = regFileName;
-        FileName = Path.GetFileName(_path);
-        RegValues = new Dictionary<string, Dictionary<string, RegValue>>();
+        _stream = File.OpenRead(regFileName);
         Read();
     }
-
-
-    /// <summary>
-    ///     Gets or sets the full path of the reg file
-    /// </summary>
-    public string FullPath
-    {
-        get => _path;
-        set
-        {
-            _path = value;
-            FileName = Path.GetFileName(_path);
-        }
-    }
-
-    /// <summary>
-    ///     Gets the name of the reg file
-    /// </summary>
-    public string FileName { get; private set; }
 
     /// <summary>
     ///     Gets the dictionary containing all entries
     /// </summary>
-    public Dictionary<string, Dictionary<string, RegValue>> RegValues { get; }
+    public Dictionary<string, Dictionary<string, RegValue>> RegValues { get; } = new();
 
     /// <summary>
     ///     Gets or sets the encoding schema of the reg file (UTF8 or Default)
     /// </summary>
     public Encoding FileEncoding { get; private set; } = Encoding.UTF8;
 
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        _stream?.Dispose();
+    }
 
     /// <summary>
     ///     Imports the reg file
     /// </summary>
-    public void Read()
+    private void Read()
     {
-        if (!File.Exists(_path))
-        {
-            throw new ArgumentException("Provided file path doesn't exist.");
-        }
+        using StreamReader sr = new(_stream);
 
-        _content = File.ReadAllText(_path);
+        _content = sr.ReadToEnd();
         FileEncoding = GetEncoding();
 
         Dictionary<string, Dictionary<string, string>> normalizedContent = null;
@@ -168,7 +152,7 @@ public class RegFile
     }
 
     /// <summary>
-    ///     Creates a flat Dictionary using given searcn pattern
+    ///     Creates a flat Dictionary using given search pattern
     /// </summary>
     /// <param name="content">The content string to be parsed</param>
     /// <returns>A Dictionary with retrieved keys and remaining content</returns>
