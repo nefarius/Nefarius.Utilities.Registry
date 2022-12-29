@@ -9,7 +9,7 @@ Work in progress, use with care 🔥
 ## Changes of this fork
 
 - Modernized code and style to latest C# language version
-- Settled on .NET Standard 2.0 minimum compatibility
+- Settled on .NET Standard 2.1 minimum compatibility
 - `RegFile` class can now parse from streams in addition to file paths
 - Added `RegValueType` for `REG_DWORD`, `REG_SZ`, ... as a [SmartEnum](https://github.com/ardalis/SmartEnum)
 - Migrated strings to better suited types where applicable
