@@ -5,6 +5,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
+using Nefarius.Utilities.Registry.Util;
+
 namespace Nefarius.Utilities.Registry;
 
 /// <summary>
@@ -62,6 +64,7 @@ public sealed class RegValueBinary : RegValue
         .AsSpan()
         .Slice(_valueStartIndex)
         .ToString()
+        .StripContinueChar()
         .Split(',')
         .Select(v => Convert.ToByte(v, 16));
 }

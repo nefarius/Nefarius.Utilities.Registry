@@ -5,6 +5,8 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using Nefarius.Utilities.Registry.Util;
+
 namespace Nefarius.Utilities.Registry;
 
 /// <summary>
@@ -203,8 +205,8 @@ public sealed class RegFile : IDisposable
                     sKey = sKey.Slice(0, sKey.Length - 1);
                 }
 
-                sKey = StripeBraces(sKey);
-                sKey = sKey == "@" ? "" : StripeLeadingChars(sKey, "\"");
+                sKey = sKey.StripeBraces();
+                sKey = sKey == "@" ? "" : sKey.StripLeadingChars("\"");
 
                 //Retrieve value
                 int startIndex = match.Index + match.Length;
@@ -277,7 +279,7 @@ public sealed class RegFile : IDisposable
                     sKey = sKey.Slice(0, sKey.Length - 2);
                 }
 
-                sKey = sKey == "@" ? "" : StripeLeadingChars(sKey, "\"");
+                sKey = sKey == "@" ? "" : sKey.StripLeadingChars("\"");
 
                 while (sValue.EndsWith("\r\n"))
                 {
@@ -308,39 +310,6 @@ public sealed class RegFile : IDisposable
         }
 
         return dictKeys;
-    }
-
-    /// <summary>
-    ///     Removes the leading and ending characters from the given string
-    /// </summary>
-    /// <param name="sLine">given string</param>
-    /// <param name="leadChar"></param>
-    /// <returns>edited string</returns>
-    internal static ReadOnlySpan<char> StripeLeadingChars(ReadOnlySpan<char> sLine, string leadChar)
-    {
-        ReadOnlySpan<char> value = sLine.Trim();
-        if (value.StartsWith(leadChar) & value.EndsWith(leadChar))
-        {
-            return value.Slice(1, value.Length - 2);
-        }
-
-        return value;
-    }
-
-    /// <summary>
-    ///     Removes the leading and ending parenthesis from the given string
-    /// </summary>
-    /// <param name="line">given string</param>
-    /// <returns>edited string</returns>
-    internal static ReadOnlySpan<char> StripeBraces(ReadOnlySpan<char> line)
-    {
-        ReadOnlySpan<char> value = line.Trim();
-        if (value.StartsWith("[") & value.EndsWith("]"))
-        {
-            return value.Slice(1, value.Length - 2);
-        }
-
-        return value;
     }
 
     /// <summary>

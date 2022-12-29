@@ -4,6 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using Nefarius.Utilities.Registry.Util;
+
 namespace Nefarius.Utilities.Registry;
 
 /// <summary>
@@ -75,9 +77,23 @@ public class RegValue
     public RegValueType Type { get; }
 
     /// <summary>
-    ///     Registry value data
+    ///     Registry value data (REG_SZ).
     /// </summary>
-    public string Value => _valueData.AsSpan().Slice(_valueStartIndex).ToString();
+    public string Value
+    {
+        get
+        {
+            string line = _valueData.AsSpan().Slice(_valueStartIndex).ToString();
+
+            try
+            {
+                line = Regex.Unescape(line);
+            }
+            catch (ArgumentException) { }
+
+            return line.StripLeadingChars("\"").ToString();
+        }
+    }
 
     /// <summary>
     ///     Parent key without root.
@@ -90,7 +106,7 @@ public class RegValue
     /// <returns>An entry for the [Registry] section of the *.sig signature file</returns>
     public override string ToString()
     {
-        return $"{ParentKey}\\\\{Entry}={Type.EncodedType}{Value}";
+        return $"{ParentKey}\\{Entry}={Type.EncodedType}{Value}";
     }
 
     private static (int start, int length) GetHive(string subKey, out int keyWithoutRootStartIndex)
@@ -182,19 +198,19 @@ public class RegValue
 
         if (line.StartsWith("hex(7):"))
         {
-            line = StripeContinueChar(line.Substring(7));
+            line = line.Substring(7).StripContinueChar();
             line = GetStringRepresentation(line.Split(','), textEncoding);
         }
 
         if (line.StartsWith("hex(6):"))
         {
-            line = StripeContinueChar(line.Substring(7));
+            line = line.Substring(7).StripContinueChar();
             line = GetStringRepresentation(line.Split(','), textEncoding);
         }
 
         if (line.StartsWith("hex(2):"))
         {
-            line = StripeContinueChar(line.Substring(7));
+            line = line.Substring(7).StripContinueChar();
             line = GetStringRepresentation(line.Split(','), textEncoding);
         }
 
@@ -205,7 +221,7 @@ public class RegValue
 
         if (line.StartsWith("hex:"))
         {
-            line = StripeContinueChar(line.Substring(4));
+            line = line.Substring(4).StripContinueChar();
             if (line.EndsWith(","))
             {
                 line = line.Substring(0, line.Length - 1);
@@ -222,43 +238,7 @@ public class RegValue
         }
         catch (ArgumentException) { }
 
-        line = StripeLeadingChars(line.AsSpan(), "\"").ToString();
-    }
-
-    /// <summary>
-    ///     Removes the leading and ending characters from the given string
-    /// </summary>
-    internal static ReadOnlySpan<char> StripeLeadingChars(ReadOnlySpan<char> line, string leadChar)
-    {
-        ReadOnlySpan<char> value = line.Trim();
-        if (value.StartsWith(leadChar) & value.EndsWith(leadChar))
-        {
-            return value.Slice(1, value.Length - 2);
-        }
-
-        return value;
-    }
-
-    /// <summary>
-    ///     Removes the leading and ending parenthesis from the given string
-    /// </summary>
-    internal static ReadOnlySpan<char> StripeBraces(ReadOnlySpan<char> line)
-    {
-        ReadOnlySpan<char> value = line.Trim();
-        if (value.StartsWith("[") & value.EndsWith("]"))
-        {
-            return value.Slice(1, value.Length - 2);
-        }
-
-        return value;
-    }
-
-    /// <summary>
-    ///     Removes the ending backslashes from the given string
-    /// </summary>
-    internal static string StripeContinueChar(string line)
-    {
-        return Regex.Replace(line, "\\\\\r\n[ ]*", string.Empty);
+        line = line.AsSpan().StripLeadingChars("\"").ToString();
     }
 
     /// <summary>
