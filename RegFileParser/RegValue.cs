@@ -203,7 +203,14 @@ public class RegValue
             return;
         }
 
-        line = Regex.Unescape(line);
+        // TODO: why was this here? .Escape method isn't used anywhere
+        // currently crashes when it tries to detect invalid escape sequences
+        try
+        {
+            line = Regex.Unescape(line);
+        }
+        catch (ArgumentException) { }
+
         line = StripeLeadingChars(line, "\"");
     }
 
