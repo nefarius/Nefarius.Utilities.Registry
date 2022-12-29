@@ -68,10 +68,10 @@ try
 
             count++;
 
-            if (item.Value is RegValueMultiSz multiSz)
-            {
-                Console.WriteLine(multiSz.Value);
-            }
+            //if (item.Value is RegValueMultiSz multiSz)
+            //{
+            //    Console.WriteLine(multiSz.Value.Count());
+            //}
         }
 
         sb.AppendLine();

@@ -5,8 +5,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-using Nefarius.Utilities.Registry.Util;
-
 namespace Nefarius.Utilities.Registry;
 
 /// <summary>
@@ -60,8 +58,7 @@ public sealed class RegValueBinary : RegValue
     /// <summary>
     ///     Binary data in any form.
     /// </summary>
-    public new IEnumerable<byte> Value => _valueData
-        .ToRefinedValueString(_valueStartIndex)
+    public new IEnumerable<byte> Value => RefinedValueString
         .Split(',')
         .Select(v => Convert.ToByte(v, 16));
 }
@@ -91,7 +88,7 @@ public sealed class RegValueMultiSz : RegValue
     {
         get
         {
-            string source = _valueData.ToRefinedValueString(_valueStartIndex);
+            string source = RefinedValueString;
 
             if (string.IsNullOrEmpty(source))
             {

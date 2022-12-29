@@ -50,15 +50,4 @@ internal static class StringExtensions
 
         return value;
     }
-
-    /// <summary>
-    ///     Returns a value string without prefix and special characters.
-    /// </summary>
-    internal static string ToRefinedValueString(this string value, int start)
-    {
-        return value.AsSpan()
-            .Slice(start)
-            .ToString()
-            .StripContinueChar();
-    }
 }

@@ -101,6 +101,15 @@ public class RegValue
     public string ParentKeyWithoutRoot => ParentKey.AsSpan().Slice(_parentKeyWithoutRootIndex).ToString();
 
     /// <summary>
+    ///     Gets the string without prefix or special characters.
+    /// </summary>
+    protected string RefinedValueString =>
+        _valueData.AsSpan()
+            .Slice(_valueStartIndex)
+            .ToString()
+            .StripContinueChar();
+
+    /// <summary>
     ///     Overriden Method
     /// </summary>
     /// <returns>An entry for the [Registry] section of the *.sig signature file</returns>
@@ -176,69 +185,6 @@ public class RegValue
 
         keyWithoutRootStartIndex = 0;
         return (0, 0);
-    }
-
-    [Obsolete]
-    internal static void StripRegEntryType(ref string line, Encoding textEncoding)
-    {
-        if (line.StartsWith("hex(a):"))
-        {
-            line = line.Substring(7);
-        }
-
-        if (line.StartsWith("hex(b):"))
-        {
-            line = line.Substring(7);
-        }
-
-        if (line.StartsWith("dword:"))
-        {
-            line = Convert.ToInt32(line.Substring(6), 16).ToString();
-        }
-
-        if (line.StartsWith("hex(7):"))
-        {
-            line = line.Substring(7).StripContinueChar();
-            line = GetStringRepresentation(line.Split(','), textEncoding);
-        }
-
-        if (line.StartsWith("hex(6):"))
-        {
-            line = line.Substring(7).StripContinueChar();
-            line = GetStringRepresentation(line.Split(','), textEncoding);
-        }
-
-        if (line.StartsWith("hex(2):"))
-        {
-            line = line.Substring(7).StripContinueChar();
-            line = GetStringRepresentation(line.Split(','), textEncoding);
-        }
-
-        if (line.StartsWith("hex(0):"))
-        {
-            line = line.Substring(7);
-        }
-
-        if (line.StartsWith("hex:"))
-        {
-            line = line.Substring(4).StripContinueChar();
-            if (line.EndsWith(","))
-            {
-                line = line.Substring(0, line.Length - 1);
-            }
-
-            return;
-        }
-
-        // TODO: why was this here? .Escape method isn't used anywhere
-        // currently crashes when it tries to detect invalid escape sequences
-        try
-        {
-            line = Regex.Unescape(line);
-        }
-        catch (ArgumentException) { }
-
-        line = line.AsSpan().StripLeadingChars("\"").ToString();
     }
 
     /// <summary>
