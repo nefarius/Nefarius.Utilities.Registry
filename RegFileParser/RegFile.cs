@@ -121,6 +121,9 @@ public sealed class RegFile : IDisposable
                         // Binary
                         .When(RegValueType.Binary).Then(() => regValueList.Add(item.Key,
                             new RegValueBinary(keyName, valueName, type, valueData, FileEncoding)))
+                        // MultiSz
+                        .When(RegValueType.MultiSz).Then(() => regValueList.Add(item.Key,
+                            new RegValueMultiSz(keyName, valueName, type, valueData, FileEncoding)))
                         // Fallback (value will remain string type)
                         .Default(() =>
                             regValueList.Add(item.Key,

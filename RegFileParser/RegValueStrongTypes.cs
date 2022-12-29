@@ -61,10 +61,54 @@ public sealed class RegValueBinary : RegValue
     ///     Binary data in any form.
     /// </summary>
     public new IEnumerable<byte> Value => _valueData
-        .AsSpan()
-        .Slice(_valueStartIndex)
-        .ToString()
-        .StripContinueChar()
+        .ToRefinedValueString(_valueStartIndex)
         .Split(',')
         .Select(v => Convert.ToByte(v, 16));
 }
+
+/// <summary>
+///     A sequence of null-terminated strings, terminated by an empty string (\0). The following is an example:
+///     String1\0String2\0String3\0LastString\0\0 The first \0 terminates the first string, the second to the last \0
+///     terminates the last string, and the final \0 terminates the sequence. Note that the final terminator must be
+///     factored into the length of the string.
+/// </summary>
+[SuppressMessage("ReSharper", "ReplaceSliceWithRangeIndexer")]
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
+public sealed class RegValueMultiSz : RegValue
+{
+    internal RegValueMultiSz(string keyName, string valueName, RegValueType valueType, string valueData,
+        Encoding encoding) : base(keyName, valueName, valueType, valueData, encoding)
+    {
+    }
+
+    /// <summary>
+    ///     A sequence of null-terminated strings, terminated by an empty string (\0). The following is an example:
+    ///     String1\0String2\0String3\0LastString\0\0 The first \0 terminates the first string, the second to the last \0
+    ///     terminates the last string, and the final \0 terminates the sequence. Note that the final terminator must be
+    ///     factored into the length of the string.
+    /// </summary>
+    public new IEnumerable<string> Value
+    {
+        get
+        {
+            string source = _valueData.ToRefinedValueString(_valueStartIndex);
+
+            if (string.IsNullOrEmpty(source))
+            {
+                return Array.Empty<string>();
+            }
+
+            byte[] bytes = source
+                .Split(',')
+                .Select(v => Convert.ToByte(v, 16))
+                .ToArray();
+
+            // Trims away potential redundant NULL-characters and splits at NULL-terminator
+            string trimmed = Encoding.Unicode.GetString(bytes).TrimEnd(char.MinValue);
+
+            // Split at NULL-character
+            return string.IsNullOrWhiteSpace(trimmed) ? Array.Empty<string>() : trimmed.Split(char.MinValue);
+        }
+    }
+}
+

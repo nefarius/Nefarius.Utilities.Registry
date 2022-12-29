@@ -67,6 +67,11 @@ try
             }
 
             count++;
+
+            if (item.Value is RegValueMultiSz multiSz)
+            {
+                Console.WriteLine(multiSz.Value);
+            }
         }
 
         sb.AppendLine();
