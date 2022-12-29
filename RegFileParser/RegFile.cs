@@ -28,6 +28,7 @@ public sealed class RegFileException : Exception
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
 [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+[SuppressMessage("ReSharper", "ReplaceSliceWithRangeIndexer")]
 public sealed class RegFile : IDisposable
 {
     private readonly Stream _stream;
@@ -96,16 +97,15 @@ public sealed class RegFile : IDisposable
             throw new RegFileException("Error normalizing reg file content.");
         }
 
-        foreach (KeyValuePair<string, Dictionary<string, string>> entry in normalizedContent)
+        foreach ((string keyName, Dictionary<string, string> values) in normalizedContent)
         {
             Dictionary<string, RegValue> regValueList = new();
 
-            foreach (KeyValuePair<string, string> item in entry.Value)
+            foreach (KeyValuePair<string, string> item in values)
             {
                 try
                 {
                     RegValueType type = RegValueType.FromEncodedType(item.Value);
-                    string keyName = entry.Key;
                     string valueName = item.Key;
                     string valueData = item.Value;
 
@@ -130,7 +130,7 @@ public sealed class RegFile : IDisposable
                 }
             }
 
-            RegValues.Add(entry.Key, regValueList);
+            RegValues.Add(keyName, regValueList);
         }
     }
 
@@ -177,27 +177,30 @@ public sealed class RegFile : IDisposable
     /// <returns>A Dictionary with retrieved keys and remaining content</returns>
     internal static Dictionary<string, string> NormalizeKeysDictionary(string content)
     {
-        string searchPattern = "^[\t ]*\\[.+\\][\r\n]+";
+        const string searchPattern = "^[\t ]*\\[.+\\][\r\n]+";
         MatchCollection matches = Regex.Matches(content, searchPattern, RegexOptions.Multiline);
 
+        ReadOnlySpan<char> input = content.AsSpan();
         Dictionary<string, string> dictKeys = new();
 
-        foreach (Match match in matches)
+        for (int i = 0; i < matches.Count; i++)
         {
+            Match match = matches[i];
+
             try
             {
                 //Retrieve key
-                string sKey = match.Value;
+                ReadOnlySpan<char> sKey = match.Value.AsSpan();
                 //change proposed by Jenda27
                 //if (sKey.EndsWith("\r\n")) sKey = sKey.Substring(0, sKey.Length - 2);
                 while (sKey.EndsWith("\r\n"))
                 {
-                    sKey = sKey.Substring(0, sKey.Length - 2);
+                    sKey = sKey.Slice(0, sKey.Length - 2);
                 }
 
                 if (sKey.EndsWith("="))
                 {
-                    sKey = sKey.Substring(0, sKey.Length - 1);
+                    sKey = sKey.Slice(0, sKey.Length - 1);
                 }
 
                 sKey = StripeBraces(sKey);
@@ -207,20 +210,20 @@ public sealed class RegFile : IDisposable
                 int startIndex = match.Index + match.Length;
                 Match nextMatch = match.NextMatch();
                 int lengthIndex = (nextMatch.Success ? nextMatch.Index : content.Length) - startIndex;
-                string sValue = content.Substring(startIndex, lengthIndex);
+                ReadOnlySpan<char> sValue = input.Slice(startIndex, lengthIndex);
                 //Removing the ending CR
                 //change suggested by Jenda27
                 //if (sValue.EndsWith("\r\n")) sValue = sValue.Substring(0, sValue.Length - 2);
                 while (sValue.EndsWith("\r\n"))
                 {
-                    sValue = sValue.Substring(0, sValue.Length - 2);
+                    sValue = sValue.Slice(0, sValue.Length - 2);
                 }
 
                 //fix for the double key names issue
                 //dictKeys.Add(sKey, sValue);
-                if (dictKeys.ContainsKey(sKey))
+                if (dictKeys.ContainsKey(sKey.ToString()))
                 {
-                    string key = dictKeys[sKey];
+                    string key = dictKeys[sKey.ToString()];
                     StringBuilder sb = new(key);
                     if (!key.EndsWith(Environment.NewLine))
                     {
@@ -228,11 +231,11 @@ public sealed class RegFile : IDisposable
                     }
 
                     sb.Append(sValue);
-                    dictKeys[sKey] = sb.ToString();
+                    dictKeys[sKey.ToString()] = sb.ToString();
                 }
                 else
                 {
-                    dictKeys.Add(sKey, sValue);
+                    dictKeys.Add(sKey.ToString(), sValue.ToString());
                 }
             }
             catch (Exception ex)
@@ -256,32 +259,34 @@ public sealed class RegFile : IDisposable
 
         Dictionary<string, string> dictKeys = new();
 
-        foreach (Match match in matches)
+        for (int i = 0; i < matches.Count; i++)
         {
+            Match match = matches[i];
+
             try
             {
                 //Retrieve key
-                string sKey = match.Groups[1].Value;
+                var sKey = match.Groups[1].Value.AsSpan();
 
                 //Retrieve value
-                string sValue = match.Groups[2].Value;
+                var sValue = match.Groups[2].Value.AsSpan();
 
                 //Removing the ending CR
                 while (sKey.EndsWith("\r\n"))
                 {
-                    sKey = sKey.Substring(0, sKey.Length - 2);
+                    sKey = sKey.Slice(0, sKey.Length - 2);
                 }
 
                 sKey = sKey == "@" ? "" : StripeLeadingChars(sKey, "\"");
 
                 while (sValue.EndsWith("\r\n"))
                 {
-                    sValue = sValue.Substring(0, sValue.Length - 2);
+                    sValue = sValue.Slice(0, sValue.Length - 2);
                 }
 
-                if (dictKeys.ContainsKey(sKey))
+                if (dictKeys.ContainsKey(sKey.ToString()))
                 {
-                    string key = dictKeys[sKey];
+                    string key = dictKeys[sKey.ToString()];
                     StringBuilder sb = new(key);
                     if (!key.EndsWith(Environment.NewLine))
                     {
@@ -289,11 +294,11 @@ public sealed class RegFile : IDisposable
                     }
 
                     sb.Append(sValue);
-                    dictKeys[sKey] = sb.ToString();
+                    dictKeys[sKey.ToString()] = sb.ToString();
                 }
                 else
                 {
-                    dictKeys.Add(sKey, sValue);
+                    dictKeys.Add(sKey.ToString(), sValue.ToString());
                 }
             }
             catch (Exception ex)
@@ -311,12 +316,12 @@ public sealed class RegFile : IDisposable
     /// <param name="sLine">given string</param>
     /// <param name="leadChar"></param>
     /// <returns>edited string</returns>
-    internal static string StripeLeadingChars(string sLine, string leadChar)
+    internal static ReadOnlySpan<char> StripeLeadingChars(ReadOnlySpan<char> sLine, string leadChar)
     {
-        string value = sLine.Trim();
+        ReadOnlySpan<char> value = sLine.Trim();
         if (value.StartsWith(leadChar) & value.EndsWith(leadChar))
         {
-            return value.Substring(1, value.Length - 2);
+            return value.Slice(1, value.Length - 2);
         }
 
         return value;
@@ -327,12 +332,12 @@ public sealed class RegFile : IDisposable
     /// </summary>
     /// <param name="line">given string</param>
     /// <returns>edited string</returns>
-    internal static string StripeBraces(string line)
+    internal static ReadOnlySpan<char> StripeBraces(ReadOnlySpan<char> line)
     {
-        string value = line.Trim();
+        ReadOnlySpan<char> value = line.Trim();
         if (value.StartsWith("[") & value.EndsWith("]"))
         {
-            return value.Substring(1, value.Length - 2);
+            return value.Slice(1, value.Length - 2);
         }
 
         return value;

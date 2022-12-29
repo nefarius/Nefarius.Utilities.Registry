@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ProjectGuid>{E0431CB7-5D8B-4B53-9C30-4F5C031ED6B5}</ProjectGuid>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Company>HFDev</Company>
     <Product>Registry Export File (.reg) Parser</Product>
     <Description>A class to read and parse reg files.</Description>
