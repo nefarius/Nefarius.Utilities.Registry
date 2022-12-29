@@ -12,25 +12,30 @@ namespace Nefarius.Utilities.Registry;
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+[SuppressMessage("ReSharper", "ReplaceSliceWithRangeIndexer")]
 public class RegValue
 {
+    private const string Hklm = "HKEY_LOCAL_MACHINE";
+    private const string Hkcr = "HKEY_CLASSES_ROOT";
+    private const string Hkus = "HKEY_USERS";
+    private const string Hkcc = "HKEY_CURRENT_CONFIG";
+    private const string Hkcu = "HKEY_CURRENT_USER";
+
+    private readonly int _parentKeyWithoutRootIndex;
+
     /// <summary>
-    ///     Value data with type stripped off.
+    ///     Full value data.
     /// </summary>
     protected readonly string _valueData;
-
-    private string _parentKey;
-    private string _parentKeyWithoutRoot;
 
     /// <summary>
     ///     Overloaded constructor
     /// </summary>
     internal RegValue(string keyName, string valueName, RegValueType valueType, string valueData, Encoding encoding)
     {
-        _parentKey = keyName.Trim();
-        _parentKeyWithoutRoot = _parentKey;
+        ParentKey = keyName.Trim();
 
-        Root = GetHive(ref _parentKeyWithoutRoot);
+        Root = GetHive(ParentKey, out _parentKeyWithoutRootIndex);
         Entry = valueName;
         Type = valueType;
 
@@ -46,16 +51,7 @@ public class RegValue
     /// <summary>
     ///     Registry value parent key
     /// </summary>
-    public string ParentKey
-    {
-        get => _parentKey;
-        set
-        {
-            _parentKey = value;
-            _parentKeyWithoutRoot = _parentKey;
-            Root = GetHive(ref _parentKeyWithoutRoot);
-        }
-    }
+    public string ParentKey { get; }
 
     /// <summary>
     ///     Registry value root hive
@@ -75,11 +71,7 @@ public class RegValue
     /// <summary>
     ///     Parent key without root.
     /// </summary>
-    public string ParentKeyWithoutRoot
-    {
-        get => _parentKeyWithoutRoot;
-        set => _parentKeyWithoutRoot = value;
-    }
+    public string ParentKeyWithoutRoot => ParentKey.AsSpan().Slice(_parentKeyWithoutRootIndex).ToString();
 
     /// <summary>
     ///     Overriden Method
@@ -87,68 +79,75 @@ public class RegValue
     /// <returns>An entry for the [Registry] section of the *.sig signature file</returns>
     public override string ToString()
     {
-        return $"{_parentKey}\\\\{Entry}={Type.EncodedType}{Value}";
+        return $"{ParentKey}\\\\{Entry}={Type.EncodedType}{Value}";
     }
 
-    private static string GetHive(ref string subKey)
+    private static string GetHive(string subKey, out int keyWithoutRootStartIndex)
     {
-        string tmpLine = subKey.Trim();
+        ReadOnlySpan<char> sKey = subKey.AsSpan();
+        ReadOnlySpan<char> tKey = sKey.Trim();
 
-        if (tmpLine.StartsWith("HKEY_LOCAL_MACHINE"))
+        if (tKey.StartsWith(Hklm))
         {
-            subKey = subKey.Substring(18);
-            if (subKey.StartsWith("\\"))
+            keyWithoutRootStartIndex = Hklm.Length;
+            ReadOnlySpan<char> slice = sKey.Slice(0, keyWithoutRootStartIndex);
+            if (slice.StartsWith("\\"))
             {
-                subKey = subKey.Substring(1);
+                keyWithoutRootStartIndex += 1;
             }
 
-            return "HKEY_LOCAL_MACHINE";
+            return Hklm;
         }
 
-        if (tmpLine.StartsWith("HKEY_CLASSES_ROOT"))
+        if (tKey.StartsWith(Hkcr))
         {
-            subKey = subKey.Substring(17);
-            if (subKey.StartsWith("\\"))
+            keyWithoutRootStartIndex = Hkcr.Length;
+            ReadOnlySpan<char> slice = sKey.Slice(0, keyWithoutRootStartIndex);
+            if (slice.StartsWith("\\"))
             {
-                subKey = subKey.Substring(1);
+                keyWithoutRootStartIndex += 1;
             }
 
-            return "HKEY_CLASSES_ROOT";
+            return Hkcr;
         }
 
-        if (tmpLine.StartsWith("HKEY_USERS"))
+        if (tKey.StartsWith(Hkus))
         {
-            subKey = subKey.Substring(10);
-            if (subKey.StartsWith("\\"))
+            keyWithoutRootStartIndex = Hkus.Length;
+            ReadOnlySpan<char> slice = sKey.Slice(0, keyWithoutRootStartIndex);
+            if (slice.StartsWith("\\"))
             {
-                subKey = subKey.Substring(1);
+                keyWithoutRootStartIndex += 1;
             }
 
-            return "HKEY_USERS";
+            return Hkus;
         }
 
-        if (tmpLine.StartsWith("HKEY_CURRENT_CONFIG"))
+        if (tKey.StartsWith(Hkcc))
         {
-            subKey = subKey.Substring(19);
-            if (subKey.StartsWith("\\"))
+            keyWithoutRootStartIndex = Hkcc.Length;
+            ReadOnlySpan<char> slice = sKey.Slice(0, keyWithoutRootStartIndex);
+            if (slice.StartsWith("\\"))
             {
-                subKey = subKey.Substring(1);
+                keyWithoutRootStartIndex += 1;
             }
 
-            return "HKEY_CURRENT_CONFIG";
+            return Hkcc;
         }
 
-        if (tmpLine.StartsWith("HKEY_CURRENT_USER"))
+        if (tKey.StartsWith(Hkcu))
         {
-            subKey = subKey.Substring(17);
-            if (subKey.StartsWith("\\"))
+            keyWithoutRootStartIndex = Hkcu.Length;
+            ReadOnlySpan<char> slice = sKey.Slice(0, keyWithoutRootStartIndex);
+            if (slice.StartsWith("\\"))
             {
-                subKey = subKey.Substring(1);
+                keyWithoutRootStartIndex += 1;
             }
 
-            return "HKEY_CURRENT_USER";
+            return Hkcu;
         }
 
+        keyWithoutRootStartIndex = 0;
         return null;
     }
 
