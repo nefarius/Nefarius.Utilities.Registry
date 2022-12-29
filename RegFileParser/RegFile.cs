@@ -22,9 +22,8 @@ public sealed class RegFileException : Exception
 }
 
 /// <summary>
-///     The main reg file parsing class.
-///     Reads the given reg file and stores the content as
-///     a Dictionary of registry keys and values as a Dictionary of registry values <see cref="RegValue" />
+///     The main reg file parsing class. Reads the given reg file and stores the content as a Dictionary of registry keys
+///     and values as a Dictionary of registry values <see cref="RegValue" />.
 /// </summary>
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
@@ -38,6 +37,7 @@ public sealed class RegFile : IDisposable
     ///     New instance of <see cref="RegFile" />.
     /// </summary>
     /// <param name="stream">The stream to read from.</param>
+    /// <remarks>If this instance gets disposed, the provided stream will be disposed as well.</remarks>
     public RegFile(Stream stream)
     {
         _stream = stream;
@@ -80,7 +80,8 @@ public sealed class RegFile : IDisposable
         _content = sr.ReadToEnd();
         FileEncoding = GetEncoding();
 
-        Dictionary<string, Dictionary<string, string>> normalizedContent = null;
+        Dictionary<string, Dictionary<string, string>> normalizedContent;
+
         try
         {
             normalizedContent = ParseFile();
