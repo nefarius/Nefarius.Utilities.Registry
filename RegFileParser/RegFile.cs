@@ -8,6 +8,20 @@ using System.Text.RegularExpressions;
 namespace Nefarius.Utilities.Registry;
 
 /// <summary>
+///     A <see cref="RegFile" /> exception.
+/// </summary>
+public sealed class RegFileException : Exception
+{
+    internal RegFileException(string message) : base(message)
+    {
+    }
+
+    internal RegFileException(string message, Exception inner) : base(message, inner)
+    {
+    }
+}
+
+/// <summary>
 ///     The main reg file parsing class.
 ///     Reads the given reg file and stores the content as
 ///     a Dictionary of registry keys and values as a Dictionary of registry values <see cref="RegValue" />
@@ -73,12 +87,12 @@ public sealed class RegFile : IDisposable
         }
         catch (Exception ex)
         {
-            throw new Exception("Error reading reg file.", ex);
+            throw new RegFileException("Error reading reg file.", ex);
         }
 
         if (normalizedContent == null)
         {
-            throw new Exception("Error normalizing reg file content.");
+            throw new RegFileException("Error normalizing reg file content.");
         }
 
         foreach (KeyValuePair<string, Dictionary<string, string>> entry in normalizedContent)
@@ -90,24 +104,28 @@ public sealed class RegFile : IDisposable
                 try
                 {
                     RegValueType type = RegValueType.FromEncodedType(item.Value);
+                    string keyName = entry.Key;
+                    string valueName = item.Key;
+                    string valueData = item.Value;
 
                     type
                         // DWORD
                         .When(RegValueType.Dword).Then(() => regValueList.Add(item.Key,
-                            new RegValueDword(entry.Key, item.Key, type, item.Value, FileEncoding)))
+                            new RegValueDword(keyName, valueName, type, valueData, FileEncoding)))
                         // QWORD
                         .When(RegValueType.Qword).Then(() => regValueList.Add(item.Key,
-                            new RegValueQword(entry.Key, item.Key, type, item.Value, FileEncoding)))
+                            new RegValueQword(keyName, valueName, type, valueData, FileEncoding)))
                         // Binary
                         .When(RegValueType.Binary).Then(() => regValueList.Add(item.Key,
-                            new RegValueBinary(entry.Key, item.Key, type, item.Value, FileEncoding)))
+                            new RegValueBinary(keyName, valueName, type, valueData, FileEncoding)))
                         // Fallback (value will remain string type)
-                        .Default(() => regValueList.Add(item.Key,
-                            new RegValue(entry.Key, item.Key, type, item.Value, FileEncoding)));
+                        .Default(() =>
+                            regValueList.Add(item.Key,
+                                new RegValue(keyName, valueName, type, valueData, FileEncoding)));
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"Exception thrown on processing string {item}", ex);
+                    throw new RegFileException($"Exception thrown on processing string {item}", ex);
                 }
             }
 
@@ -145,7 +163,7 @@ public sealed class RegFile : IDisposable
         }
         catch (Exception ex)
         {
-            throw new Exception("Exception thrown on parsing reg file.", ex);
+            throw new RegFileException("Exception thrown on parsing reg file.", ex);
         }
 
         return retValue;
@@ -218,7 +236,7 @@ public sealed class RegFile : IDisposable
             }
             catch (Exception ex)
             {
-                throw new Exception($"Exception thrown on processing string {match.Value}", ex);
+                throw new RegFileException($"Exception thrown on processing string {match.Value}", ex);
             }
         }
 
@@ -279,7 +297,7 @@ public sealed class RegFile : IDisposable
             }
             catch (Exception ex)
             {
-                throw new Exception($"Exception thrown on processing string {match.Value}", ex);
+                throw new RegFileException($"Exception thrown on processing string {match.Value}", ex);
             }
         }
 
