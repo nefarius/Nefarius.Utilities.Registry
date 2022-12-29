@@ -109,3 +109,34 @@ public sealed class RegValueMultiSz : RegValue
     }
 }
 
+/// <summary>
+///     A null-terminated string. This will be either a Unicode or an ANSI string, depending on whether you use the Unicode
+///     or ANSI functions.
+/// </summary>
+[SuppressMessage("ReSharper", "ReplaceSliceWithRangeIndexer")]
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
+public sealed class RegValueSz : RegValue
+{
+    internal RegValueSz(string keyName, string valueName, RegValueType valueType, string valueData,
+        Encoding encoding) : base(keyName, valueName, valueType, valueData, encoding)
+    {
+    }
+}
+
+/// <summary>
+///     No defined value type.
+/// </summary>
+[SuppressMessage("ReSharper", "ReplaceSliceWithRangeIndexer")]
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
+public sealed class RegValueNone : RegValue
+{
+    internal RegValueNone(string keyName, string valueName, RegValueType valueType, string valueData,
+        Encoding encoding) : base(keyName, valueName, valueType, valueData, encoding)
+    {
+    }
+
+    /// <summary>
+    ///     No defined value type.
+    /// </summary>
+    public new object Value => null;
+}
