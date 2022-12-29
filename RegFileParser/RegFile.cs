@@ -119,7 +119,7 @@ public sealed class RegFile : IDisposable
     ///     Parses the reg file for reg keys and reg values
     /// </summary>
     /// <returns>A Dictionary with reg keys as Dictionary keys and a Dictionary of (valuename, valuedata)</returns>
-    private Dictionary<String, Dictionary<String, String>> ParseFile()
+    private Dictionary<string, Dictionary<string, string>> ParseFile()
     {
         Dictionary<string, Dictionary<string, string>> retValue = new();
 
@@ -156,7 +156,7 @@ public sealed class RegFile : IDisposable
     /// </summary>
     /// <param name="content">The content string to be parsed</param>
     /// <returns>A Dictionary with retrieved keys and remaining content</returns>
-    internal static Dictionary<String, String> NormalizeKeysDictionary(String content)
+    internal static Dictionary<string, string> NormalizeKeysDictionary(string content)
     {
         string searchPattern = "^[\t ]*\\[.+\\][\r\n]+";
         MatchCollection matches = Regex.Matches(content, searchPattern, RegexOptions.Multiline);
@@ -292,7 +292,6 @@ public sealed class RegFile : IDisposable
     /// <param name="sLine">given string</param>
     /// <param name="leadChar"></param>
     /// <returns>edited string</returns>
-    /// <remarks></remarks>
     internal static string StripeLeadingChars(string sLine, string leadChar)
     {
         string value = sLine.Trim();
@@ -309,7 +308,6 @@ public sealed class RegFile : IDisposable
     /// </summary>
     /// <param name="line">given string</param>
     /// <returns>edited string</returns>
-    /// <remarks></remarks>
     internal static string StripeBraces(string line)
     {
         string value = line.Trim();
@@ -324,7 +322,6 @@ public sealed class RegFile : IDisposable
     /// <summary>
     ///     Retrieves the encoding of the reg file, checking the word "REGEDIT4"
     /// </summary>
-    /// <returns></returns>
     private Encoding GetEncoding()
     {
         return Regex.IsMatch(_content, "([ ]*(\r\n)*)REGEDIT4", RegexOptions.IgnoreCase | RegexOptions.Singleline)
