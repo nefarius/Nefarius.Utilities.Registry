@@ -30,19 +30,29 @@ public class RegValue
     protected readonly string _valueData;
 
     /// <summary>
+    ///     The offset where the actual value data starts.
+    /// </summary>
+    protected readonly int _valueStartIndex;
+
+    /// <summary>
     ///     Overloaded constructor
     /// </summary>
     internal RegValue(string keyName, string valueName, RegValueType valueType, string valueData, Encoding encoding)
     {
+        Encoding = encoding;
+        Entry = valueName;
+        Type = valueType;
         ParentKey = keyName.Trim();
 
         _rootIndex = GetHive(ParentKey, out _parentKeyWithoutRootIndex);
-        Entry = valueName;
-        Type = valueType;
-
         _valueData = valueData;
-        StripRegEntryType(ref _valueData, encoding);
+        _valueStartIndex = GetValueStartIndex(valueData);
     }
+
+    /// <summary>
+    ///     The text encoding of the data value.
+    /// </summary>
+    public Encoding Encoding { get; }
 
     /// <summary>
     ///     Registry value name
@@ -67,7 +77,7 @@ public class RegValue
     /// <summary>
     ///     Registry value data
     /// </summary>
-    public string Value => _valueData;
+    public string Value => _valueData.AsSpan().Slice(_valueStartIndex).ToString();
 
     /// <summary>
     ///     Parent key without root.
@@ -152,6 +162,54 @@ public class RegValue
         return (0, 0);
     }
 
+    internal static int GetValueStartIndex(string input)
+    {
+        ReadOnlySpan<char> line = input.AsSpan();
+
+        if (line.StartsWith("hex(a):"))
+        {
+            return 7;
+        }
+
+        if (line.StartsWith("hex(b):"))
+        {
+            return 7;
+        }
+
+        if (line.StartsWith("dword:"))
+        {
+            return 6;
+        }
+
+        if (line.StartsWith("hex(7):"))
+        {
+            return 7;
+        }
+
+        if (line.StartsWith("hex(6):"))
+        {
+            return 7;
+        }
+
+        if (line.StartsWith("hex(2):"))
+        {
+            return 7;
+        }
+
+        if (line.StartsWith("hex(0):"))
+        {
+            return 7;
+        }
+
+        if (line.StartsWith("hex:"))
+        {
+            return 4;
+        }
+        
+        return 0;
+    }
+
+    [Obsolete]
     internal static void StripRegEntryType(ref string line, Encoding textEncoding)
     {
         if (line.StartsWith("hex(a):"))
