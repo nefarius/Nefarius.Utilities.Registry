@@ -112,9 +112,12 @@ public sealed class RegValueType : SmartEnum<RegValueType>
     /// <returns>A <see cref="RegValueType" /> or null.</returns>
     public static RegValueType FromEncodedType(string encodedType)
     {
-        return AllTypes.FirstOrDefault(t => encodedType
+        var type = AllTypes.FirstOrDefault(t => !string.IsNullOrEmpty(t.EncodedType) && encodedType
             .TrimStart()
             .StartsWith(t.EncodedType, StringComparison.OrdinalIgnoreCase)
         );
+
+        // no prefix means string (REG_SZ)
+        return type ?? Sz;
     }
 }
