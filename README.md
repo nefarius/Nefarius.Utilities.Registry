@@ -13,7 +13,7 @@ Work in progress, use with care 🔥
 - `RegFile` class can now parse from streams in addition to file paths
 - Added `RegValueType` for `REG_DWORD`, `REG_SZ`, ... as a [SmartEnum](https://github.com/ardalis/SmartEnum)
 - Migrated strings to better suited types where applicable
-- Migrated string processing to using Spans where applicable
+- Migrated string processing to using [Spans](https://learn.microsoft.com/en-us/dotnet/api/system.span-1?view=net-7.0) where applicable
 - Greatly improved parsing speed and reduced memory footprint
 
 ## 3rd party credits
