@@ -46,7 +46,7 @@ public class RegValue
 
         _rootIndex = GetHive(ParentKey, out _parentKeyWithoutRootIndex);
         _valueData = valueData;
-        _valueStartIndex = GetValueStartIndex(valueData);
+        _valueStartIndex = Type.EncodedType?.Length ?? 0;
     }
 
     /// <summary>
@@ -160,53 +160,6 @@ public class RegValue
 
         keyWithoutRootStartIndex = 0;
         return (0, 0);
-    }
-
-    internal static int GetValueStartIndex(string input)
-    {
-        ReadOnlySpan<char> line = input.AsSpan();
-
-        if (line.StartsWith("hex(a):"))
-        {
-            return 7;
-        }
-
-        if (line.StartsWith("hex(b):"))
-        {
-            return 7;
-        }
-
-        if (line.StartsWith("dword:"))
-        {
-            return 6;
-        }
-
-        if (line.StartsWith("hex(7):"))
-        {
-            return 7;
-        }
-
-        if (line.StartsWith("hex(6):"))
-        {
-            return 7;
-        }
-
-        if (line.StartsWith("hex(2):"))
-        {
-            return 7;
-        }
-
-        if (line.StartsWith("hex(0):"))
-        {
-            return 7;
-        }
-
-        if (line.StartsWith("hex:"))
-        {
-            return 4;
-        }
-        
-        return 0;
     }
 
     [Obsolete]
