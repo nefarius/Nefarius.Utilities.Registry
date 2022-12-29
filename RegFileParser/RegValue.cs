@@ -22,6 +22,7 @@ public class RegValue
     private const string Hkcu = "HKEY_CURRENT_USER";
 
     private readonly int _parentKeyWithoutRootIndex;
+    private readonly (int start, int length) _rootIndex;
 
     /// <summary>
     ///     Full value data.
@@ -35,7 +36,7 @@ public class RegValue
     {
         ParentKey = keyName.Trim();
 
-        Root = GetHive(ParentKey, out _parentKeyWithoutRootIndex);
+        _rootIndex = GetHive(ParentKey, out _parentKeyWithoutRootIndex);
         Entry = valueName;
         Type = valueType;
 
@@ -56,7 +57,7 @@ public class RegValue
     /// <summary>
     ///     Registry value root hive
     /// </summary>
-    public string Root { get; set; }
+    public string Root => ParentKey.AsSpan().Slice(_rootIndex.start, _rootIndex.length).ToString();
 
     /// <summary>
     ///     Registry value type
@@ -82,7 +83,7 @@ public class RegValue
         return $"{ParentKey}\\\\{Entry}={Type.EncodedType}{Value}";
     }
 
-    private static string GetHive(string subKey, out int keyWithoutRootStartIndex)
+    private static (int start, int length) GetHive(string subKey, out int keyWithoutRootStartIndex)
     {
         ReadOnlySpan<char> sKey = subKey.AsSpan();
         ReadOnlySpan<char> tKey = sKey.Trim();
@@ -90,65 +91,65 @@ public class RegValue
         if (tKey.StartsWith(Hklm))
         {
             keyWithoutRootStartIndex = Hklm.Length;
-            ReadOnlySpan<char> slice = sKey.Slice(0, keyWithoutRootStartIndex);
+            ReadOnlySpan<char> slice = sKey.Slice(keyWithoutRootStartIndex);
             if (slice.StartsWith("\\"))
             {
                 keyWithoutRootStartIndex += 1;
             }
 
-            return Hklm;
+            return (0, Hklm.Length);
         }
 
         if (tKey.StartsWith(Hkcr))
         {
             keyWithoutRootStartIndex = Hkcr.Length;
-            ReadOnlySpan<char> slice = sKey.Slice(0, keyWithoutRootStartIndex);
+            ReadOnlySpan<char> slice = sKey.Slice(keyWithoutRootStartIndex);
             if (slice.StartsWith("\\"))
             {
                 keyWithoutRootStartIndex += 1;
             }
 
-            return Hkcr;
+            return (0, Hkcr.Length);
         }
 
         if (tKey.StartsWith(Hkus))
         {
             keyWithoutRootStartIndex = Hkus.Length;
-            ReadOnlySpan<char> slice = sKey.Slice(0, keyWithoutRootStartIndex);
+            ReadOnlySpan<char> slice = sKey.Slice(keyWithoutRootStartIndex);
             if (slice.StartsWith("\\"))
             {
                 keyWithoutRootStartIndex += 1;
             }
 
-            return Hkus;
+            return (0, Hkus.Length);
         }
 
         if (tKey.StartsWith(Hkcc))
         {
             keyWithoutRootStartIndex = Hkcc.Length;
-            ReadOnlySpan<char> slice = sKey.Slice(0, keyWithoutRootStartIndex);
+            ReadOnlySpan<char> slice = sKey.Slice(keyWithoutRootStartIndex);
             if (slice.StartsWith("\\"))
             {
                 keyWithoutRootStartIndex += 1;
             }
 
-            return Hkcc;
+            return (0, Hkcc.Length);
         }
 
         if (tKey.StartsWith(Hkcu))
         {
             keyWithoutRootStartIndex = Hkcu.Length;
-            ReadOnlySpan<char> slice = sKey.Slice(0, keyWithoutRootStartIndex);
+            ReadOnlySpan<char> slice = sKey.Slice(keyWithoutRootStartIndex);
             if (slice.StartsWith("\\"))
             {
                 keyWithoutRootStartIndex += 1;
             }
 
-            return Hkcu;
+            return (0, Hkcu.Length);
         }
 
         keyWithoutRootStartIndex = 0;
-        return null;
+        return (0, 0);
     }
 
     internal static void StripRegEntryType(ref string line, Encoding textEncoding)
