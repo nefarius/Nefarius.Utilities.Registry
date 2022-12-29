@@ -222,18 +222,18 @@ public class RegValue
         }
         catch (ArgumentException) { }
 
-        line = StripeLeadingChars(line, "\"");
+        line = StripeLeadingChars(line.AsSpan(), "\"").ToString();
     }
 
     /// <summary>
     ///     Removes the leading and ending characters from the given string
     /// </summary>
-    internal static string StripeLeadingChars(string line, string leadChar)
+    internal static ReadOnlySpan<char> StripeLeadingChars(ReadOnlySpan<char> line, string leadChar)
     {
-        string value = line.Trim();
+        ReadOnlySpan<char> value = line.Trim();
         if (value.StartsWith(leadChar) & value.EndsWith(leadChar))
         {
-            return value.Substring(1, value.Length - 2);
+            return value.Slice(1, value.Length - 2);
         }
 
         return value;
@@ -242,12 +242,12 @@ public class RegValue
     /// <summary>
     ///     Removes the leading and ending parenthesis from the given string
     /// </summary>
-    internal static string StripeBraces(string line)
+    internal static ReadOnlySpan<char> StripeBraces(ReadOnlySpan<char> line)
     {
-        string value = line.Trim();
+        ReadOnlySpan<char> value = line.Trim();
         if (value.StartsWith("[") & value.EndsWith("]"))
         {
-            return value.Substring(1, value.Length - 2);
+            return value.Slice(1, value.Length - 2);
         }
 
         return value;
