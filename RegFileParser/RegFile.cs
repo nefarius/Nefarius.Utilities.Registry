@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -83,7 +84,7 @@ public sealed class RegFile : IDisposable
         _content = sr.ReadToEnd();
         FileEncoding = GetEncoding();
 
-        Dictionary<string, Dictionary<string, string>> normalizedContent;
+        ConcurrentDictionary<string, ConcurrentDictionary<string, string>> normalizedContent;
 
         try
         {
@@ -99,7 +100,7 @@ public sealed class RegFile : IDisposable
             throw new RegFileException("Error normalizing reg file content.");
         }
 
-        foreach ((string keyName, Dictionary<string, string> values) in normalizedContent)
+        foreach ((string keyName, ConcurrentDictionary<string, string> values) in normalizedContent)
         {
             Dictionary<string, RegValue> regValueList = new();
 
@@ -149,16 +150,16 @@ public sealed class RegFile : IDisposable
     ///     Parses the reg file for reg keys and reg values
     /// </summary>
     /// <returns>A Dictionary with reg keys as Dictionary keys and a Dictionary of (valuename, valuedata)</returns>
-    private Dictionary<string, Dictionary<string, string>> ParseFile()
+    private ConcurrentDictionary<string, ConcurrentDictionary<string, string>> ParseFile()
     {
-        Dictionary<string, Dictionary<string, string>> retValue = new();
+        ConcurrentDictionary<string, ConcurrentDictionary<string, string>> retValue = new();
 
         try
         {
             //Get registry keys and values content string
             //Change proposed by Jenda27
             //Dictionary<String, String> dictKeys = NormalizeDictionary("^[\t ]*\\[.+\\]\r\n", content, true);
-            Dictionary<string, string> dictKeys = NormalizeKeysDictionary(_content);
+            ConcurrentDictionary<string, string> dictKeys = NormalizeKeysDictionary(_content);
 
             //Get registry values for a given key
             foreach (KeyValuePair<string, string> item in dictKeys)
@@ -169,8 +170,8 @@ public sealed class RegFile : IDisposable
                 }
 
                 //Dictionary<String, String> dictValues = NormalizeDictionary("^[\t ]*(\".+\"|@)=", item.Value, false);
-                Dictionary<string, string> dictValues = NormalizeValuesDictionary(item.Value);
-                retValue.Add(item.Key, dictValues);
+                ConcurrentDictionary<string, string> dictValues = NormalizeValuesDictionary(item.Value);
+                retValue.TryAdd(item.Key, dictValues);
             }
         }
         catch (Exception ex)
@@ -186,13 +187,13 @@ public sealed class RegFile : IDisposable
     /// </summary>
     /// <param name="content">The content string to be parsed</param>
     /// <returns>A Dictionary with retrieved keys and remaining content</returns>
-    internal static Dictionary<string, string> NormalizeKeysDictionary(string content)
+    internal static ConcurrentDictionary<string, string> NormalizeKeysDictionary(string content)
     {
         const string searchPattern = "^[\t ]*\\[.+\\][\r\n]+";
         MatchCollection matches = Regex.Matches(content, searchPattern, RegexOptions.Multiline);
 
         ReadOnlySpan<char> input = content.AsSpan();
-        Dictionary<string, string> dictKeys = new();
+        ConcurrentDictionary<string, string> dictKeys = new();
 
         for (int i = 0; i < matches.Count; i++)
         {
@@ -246,7 +247,7 @@ public sealed class RegFile : IDisposable
                 }
                 else
                 {
-                    dictKeys.Add(sKey.ToString(), sValue.ToString());
+                    dictKeys.TryAdd(sKey.ToString(), sValue.ToString());
                 }
             }
             catch (Exception ex)
@@ -263,12 +264,12 @@ public sealed class RegFile : IDisposable
     /// </summary>
     /// <param name="input">The content string to be parsed</param>
     /// <returns>A Dictionary with retrieved keys and remaining content</returns>
-    internal static Dictionary<string, string> NormalizeValuesDictionary(string input)
+    internal static ConcurrentDictionary<string, string> NormalizeValuesDictionary(string input)
     {
         const string searchPattern = @"^[\t ]*("".+""|@)=(""[^""]*""|[^""]+)";
         MatchCollection matches = Regex.Matches(input, searchPattern, RegexOptions.Multiline);
 
-        Dictionary<string, string> dictKeys = new();
+        ConcurrentDictionary<string, string> dictKeys = new();
 
         for (int i = 0; i < matches.Count; i++)
         {
@@ -309,7 +310,7 @@ public sealed class RegFile : IDisposable
                 }
                 else
                 {
-                    dictKeys.Add(sKey.ToString(), sValue.ToString());
+                    dictKeys.TryAdd(sKey.ToString(), sValue.ToString());
                 }
             }
             catch (Exception ex)
