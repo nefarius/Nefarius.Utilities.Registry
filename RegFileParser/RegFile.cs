@@ -32,8 +32,9 @@ public sealed class RegFileException : Exception
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
 [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 [SuppressMessage("ReSharper", "ReplaceSliceWithRangeIndexer")]
-public sealed class RegFile : IDisposable
+public sealed class RegFile
 {
+    private readonly bool _isStreamOwned;
     private readonly Stream _stream;
     private string _content;
 
@@ -55,6 +56,7 @@ public sealed class RegFile : IDisposable
     public RegFile(string regFileName)
     {
         _stream = File.OpenRead(regFileName);
+        _isStreamOwned = true;
         Read();
     }
 
@@ -68,12 +70,6 @@ public sealed class RegFile : IDisposable
     /// </summary>
     public Encoding FileEncoding { get; private set; } = Encoding.UTF8;
 
-    /// <inheritdoc />
-    public void Dispose()
-    {
-        _stream?.Dispose();
-    }
-
     /// <summary>
     ///     Imports the reg file
     /// </summary>
@@ -82,6 +78,13 @@ public sealed class RegFile : IDisposable
         using StreamReader sr = new(_stream);
 
         _content = sr.ReadToEnd();
+
+        if (_isStreamOwned)
+        {
+            sr.Dispose();
+            _stream.Dispose();
+        }
+
         FileEncoding = GetEncoding();
 
         ConcurrentDictionary<string, ConcurrentDictionary<string, string>> normalizedContent;
@@ -278,10 +281,10 @@ public sealed class RegFile : IDisposable
             try
             {
                 //Retrieve key
-                var sKey = match.Groups[1].Value.AsSpan();
+                ReadOnlySpan<char> sKey = match.Groups[1].Value.AsSpan();
 
                 //Retrieve value
-                var sValue = match.Groups[2].Value.AsSpan();
+                ReadOnlySpan<char> sValue = match.Groups[2].Value.AsSpan();
 
                 //Removing the ending CR
                 while (sKey.EndsWith("\r\n"))
