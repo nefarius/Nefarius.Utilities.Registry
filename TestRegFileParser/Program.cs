@@ -86,7 +86,3 @@ catch (Exception ex)
 {
     Console.WriteLine("Exception thrown\n{0}", ex);
 }
-
-//Wait for ENTER key to close program
-Console.WriteLine("Press 'ENTER' to exit program.");
-Console.ReadLine();
