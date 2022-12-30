@@ -77,14 +77,10 @@ try
         sb.AppendLine();
     }
     
-    var t = sb.ToString();
-
-    /*
     File.WriteAllText(outputPath, sb.ToString());
     Console.WriteLine("Content file generated as '{0}'", outputPath);
 
     Console.WriteLine("Reg file contains {0} keys and {1} values.", regFile.RegValues.Count, count);
-    */
 }
 catch (Exception ex)
 {
