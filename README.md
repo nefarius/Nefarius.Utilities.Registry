@@ -6,7 +6,7 @@
 
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/nefarius/Nefarius.Utilities.Registry/dotnet.yml) ![Requirements](https://img.shields.io/badge/Requires-.NET%207-blue.svg)
 
-Work in progress, use with care 🔥
+A fast parser for Registry Export (.reg) Files.
 
 ## Changes of this fork
 
