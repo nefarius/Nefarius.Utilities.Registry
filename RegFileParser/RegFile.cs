@@ -230,12 +230,14 @@ public sealed partial class RegFile
                     sValue = sValue.Slice(0, sValue.Length - 2);
                 }
 
+                var dictKey = sKey.ToString();
+
                 //fix for the double key names issue
                 //dictKeys.Add(sKey, sValue);
                 // TODO: see if this can be tuned further
-                if (dictKeys.ContainsKey(sKey.ToString()))
+                if (dictKeys.ContainsKey(dictKey))
                 {
-                    string key = dictKeys[sKey.ToString()];
+                    string key = dictKeys[dictKey];
                     StringBuilder sb = new(key);
                     if (!key.EndsWith(Environment.NewLine))
                     {
@@ -243,11 +245,11 @@ public sealed partial class RegFile
                     }
 
                     sb.Append(sValue);
-                    dictKeys[sKey.ToString()] = sb.ToString();
+                    dictKeys[dictKey] = sb.ToString();
                 }
                 else
                 {
-                    dictKeys.TryAdd(sKey.ToString(), sValue.ToString());
+                    dictKeys.TryAdd(dictKey, sValue.ToString());
                 }
             }
             catch (Exception ex)
@@ -298,10 +300,12 @@ public sealed partial class RegFile
                     sValue = sValue.Slice(0, sValue.Length - 2);
                 }
 
+                var dictKey = sKey.ToString();
+
                 // TODO: can this be tuned further?
-                if (dictKeys.ContainsKey(sKey.ToString()))
+                if (dictKeys.ContainsKey(dictKey))
                 {
-                    string key = dictKeys[sKey.ToString()];
+                    string key = dictKeys[dictKey];
                     StringBuilder sb = new(key);
                     if (!key.EndsWith(Environment.NewLine))
                     {
@@ -309,11 +313,11 @@ public sealed partial class RegFile
                     }
 
                     sb.Append(sValue);
-                    dictKeys[sKey.ToString()] = sb.ToString();
+                    dictKeys[dictKey] = sb.ToString();
                 }
                 else
                 {
-                    dictKeys.TryAdd(sKey.ToString(), sValue.ToString());
+                    dictKeys.TryAdd(dictKey, sValue.ToString());
                 }
             }
             catch (Exception ex)
