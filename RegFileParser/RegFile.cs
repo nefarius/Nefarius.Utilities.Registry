@@ -298,6 +298,7 @@ public sealed partial class RegFile
                     sValue = sValue.Slice(0, sValue.Length - 2);
                 }
 
+                // TODO: can this be tuned further?
                 if (dictKeys.ContainsKey(sKey.ToString()))
                 {
                     string key = dictKeys[sKey.ToString()];
