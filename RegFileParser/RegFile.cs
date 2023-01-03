@@ -32,7 +32,7 @@ public sealed class RegFileException : Exception
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
 [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 [SuppressMessage("ReSharper", "ReplaceSliceWithRangeIndexer")]
-public sealed class RegFile
+public sealed partial class RegFile
 {
     private readonly bool _isStreamOwned;
     private readonly Stream _stream;
@@ -160,8 +160,6 @@ public sealed class RegFile
         try
         {
             //Get registry keys and values content string
-            //Change proposed by Jenda27
-            //Dictionary<String, String> dictKeys = NormalizeDictionary("^[\t ]*\\[.+\\]\r\n", content, true);
             ConcurrentDictionary<string, string> dictKeys = NormalizeKeysDictionary(_content);
 
             //Get registry values for a given key
@@ -172,7 +170,6 @@ public sealed class RegFile
                     continue;
                 }
 
-                //Dictionary<String, String> dictValues = NormalizeDictionary("^[\t ]*(\".+\"|@)=", item.Value, false);
                 ConcurrentDictionary<string, string> dictValues = NormalizeValuesDictionary(item.Value);
                 retValue.TryAdd(item.Key, dictValues);
             }
@@ -185,6 +182,9 @@ public sealed class RegFile
         return retValue;
     }
 
+    [GeneratedRegex("^[\t ]*\\[.+\\][\r\n]+", RegexOptions.Multiline, "en-US")]
+    private static partial Regex RegKeysRegex();
+
     /// <summary>
     ///     Creates a flat Dictionary using given search pattern
     /// </summary>
@@ -192,8 +192,7 @@ public sealed class RegFile
     /// <returns>A Dictionary with retrieved keys and remaining content</returns>
     internal static ConcurrentDictionary<string, string> NormalizeKeysDictionary(string content)
     {
-        const string searchPattern = "^[\t ]*\\[.+\\][\r\n]+";
-        MatchCollection matches = Regex.Matches(content, searchPattern, RegexOptions.Multiline);
+        MatchCollection matches = RegKeysRegex().Matches(content);
 
         ReadOnlySpan<char> input = content.AsSpan();
         ConcurrentDictionary<string, string> dictKeys = new();
@@ -206,8 +205,7 @@ public sealed class RegFile
             {
                 //Retrieve key
                 ReadOnlySpan<char> sKey = match.Value.AsSpan();
-                //change proposed by Jenda27
-                //if (sKey.EndsWith("\r\n")) sKey = sKey.Substring(0, sKey.Length - 2);
+
                 while (sKey.EndsWith("\r\n"))
                 {
                     sKey = sKey.Slice(0, sKey.Length - 2);
@@ -226,9 +224,7 @@ public sealed class RegFile
                 Match nextMatch = match.NextMatch();
                 int lengthIndex = (nextMatch.Success ? nextMatch.Index : content.Length) - startIndex;
                 ReadOnlySpan<char> sValue = input.Slice(startIndex, lengthIndex);
-                //Removing the ending CR
-                //change suggested by Jenda27
-                //if (sValue.EndsWith("\r\n")) sValue = sValue.Substring(0, sValue.Length - 2);
+
                 while (sValue.EndsWith("\r\n"))
                 {
                     sValue = sValue.Slice(0, sValue.Length - 2);
@@ -262,6 +258,9 @@ public sealed class RegFile
         return dictKeys;
     }
 
+    [GeneratedRegex(@"^[\t ]*("".+""|@)=(""[^""]*""|[^""]+)", RegexOptions.Multiline, "en-US")]
+    private static partial Regex RegValuesRegex();
+
     /// <summary>
     ///     Creates a flat Dictionary using given search pattern
     /// </summary>
@@ -269,8 +268,7 @@ public sealed class RegFile
     /// <returns>A Dictionary with retrieved keys and remaining content</returns>
     internal static ConcurrentDictionary<string, string> NormalizeValuesDictionary(string input)
     {
-        const string searchPattern = @"^[\t ]*("".+""|@)=(""[^""]*""|[^""]+)";
-        MatchCollection matches = Regex.Matches(input, searchPattern, RegexOptions.Multiline);
+        MatchCollection matches = RegValuesRegex().Matches(input);
 
         ConcurrentDictionary<string, string> dictKeys = new();
 
@@ -325,12 +323,15 @@ public sealed class RegFile
         return dictKeys;
     }
 
+    [GeneratedRegex("([ ]*(\r\n)*)REGEDIT4", RegexOptions.IgnoreCase | RegexOptions.Singleline, "en-US")]
+    private static partial Regex RegEncodingRegex();
+
     /// <summary>
     ///     Retrieves the encoding of the reg file, checking the word "REGEDIT4"
     /// </summary>
     private Encoding GetEncoding()
     {
-        return Regex.IsMatch(_content, "([ ]*(\r\n)*)REGEDIT4", RegexOptions.IgnoreCase | RegexOptions.Singleline)
+        return RegEncodingRegex().IsMatch(_content.AsSpan())
             ? Encoding.Default
             : Encoding.UTF8;
     }

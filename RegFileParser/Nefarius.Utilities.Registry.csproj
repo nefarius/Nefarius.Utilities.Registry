@@ -1,12 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{E0431CB7-5D8B-4B53-9C30-4F5C031ED6B5}</ProjectGuid>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Company>HFDev</Company>
     <Product>Registry Export File (.reg) Parser</Product>
     <Description>A class to read and parse reg files.</Description>
     <Copyright>Copyright © HFDev 2010, Benjamin Höglinger-Stelzer 2022</Copyright>
-    <Version>1.5.0</Version>
+    <Version>2.0.0</Version>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <PackageLicenseExpression>CPOL-1.02</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
