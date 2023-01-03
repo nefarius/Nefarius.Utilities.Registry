@@ -204,7 +204,7 @@ public sealed partial class RegFile
             try
             {
                 //Retrieve key
-                ReadOnlySpan<char> sKey = match.Value.AsSpan();
+                ReadOnlySpan<char> sKey = match.ValueSpan;
 
                 while (sKey.EndsWith("\r\n"))
                 {
@@ -280,10 +280,10 @@ public sealed partial class RegFile
             try
             {
                 //Retrieve key
-                ReadOnlySpan<char> sKey = match.Groups[1].Value.AsSpan();
+                ReadOnlySpan<char> sKey = match.Groups[1].ValueSpan;
 
                 //Retrieve value
-                ReadOnlySpan<char> sValue = match.Groups[2].Value.AsSpan();
+                ReadOnlySpan<char> sValue = match.Groups[2].ValueSpan;
 
                 //Removing the ending CR
                 while (sKey.EndsWith("\r\n"))
