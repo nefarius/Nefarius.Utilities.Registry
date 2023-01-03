@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ProjectGuid>{F8708285-A12B-479D-BAFA-B0398396554E}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Company>HFDev</Company>
     <Product>TestRegFileParser</Product>
     <Copyright>Copyright © HFDev 2010</Copyright>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -31,8 +32,9 @@ public sealed class RegFileException : Exception
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
 [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 [SuppressMessage("ReSharper", "ReplaceSliceWithRangeIndexer")]
-public sealed class RegFile : IDisposable
+public sealed partial class RegFile
 {
+    private readonly bool _isStreamOwned;
     private readonly Stream _stream;
     private string _content;
 
@@ -54,6 +56,7 @@ public sealed class RegFile : IDisposable
     public RegFile(string regFileName)
     {
         _stream = File.OpenRead(regFileName);
+        _isStreamOwned = true;
         Read();
     }
 
@@ -67,12 +70,6 @@ public sealed class RegFile : IDisposable
     /// </summary>
     public Encoding FileEncoding { get; private set; } = Encoding.UTF8;
 
-    /// <inheritdoc />
-    public void Dispose()
-    {
-        _stream?.Dispose();
-    }
-
     /// <summary>
     ///     Imports the reg file
     /// </summary>
@@ -81,9 +78,16 @@ public sealed class RegFile : IDisposable
         using StreamReader sr = new(_stream);
 
         _content = sr.ReadToEnd();
+
+        if (_isStreamOwned)
+        {
+            sr.Dispose();
+            _stream.Dispose();
+        }
+
         FileEncoding = GetEncoding();
 
-        Dictionary<string, Dictionary<string, string>> normalizedContent;
+        ConcurrentDictionary<string, ConcurrentDictionary<string, string>> normalizedContent;
 
         try
         {
@@ -99,7 +103,7 @@ public sealed class RegFile : IDisposable
             throw new RegFileException("Error normalizing reg file content.");
         }
 
-        foreach ((string keyName, Dictionary<string, string> values) in normalizedContent)
+        foreach ((string keyName, ConcurrentDictionary<string, string> values) in normalizedContent)
         {
             Dictionary<string, RegValue> regValueList = new();
 
@@ -149,16 +153,14 @@ public sealed class RegFile : IDisposable
     ///     Parses the reg file for reg keys and reg values
     /// </summary>
     /// <returns>A Dictionary with reg keys as Dictionary keys and a Dictionary of (valuename, valuedata)</returns>
-    private Dictionary<string, Dictionary<string, string>> ParseFile()
+    private ConcurrentDictionary<string, ConcurrentDictionary<string, string>> ParseFile()
     {
-        Dictionary<string, Dictionary<string, string>> retValue = new();
+        ConcurrentDictionary<string, ConcurrentDictionary<string, string>> retValue = new();
 
         try
         {
             //Get registry keys and values content string
-            //Change proposed by Jenda27
-            //Dictionary<String, String> dictKeys = NormalizeDictionary("^[\t ]*\\[.+\\]\r\n", content, true);
-            Dictionary<string, string> dictKeys = NormalizeKeysDictionary(_content);
+            ConcurrentDictionary<string, string> dictKeys = NormalizeKeysDictionary(_content);
 
             //Get registry values for a given key
             foreach (KeyValuePair<string, string> item in dictKeys)
@@ -168,9 +170,8 @@ public sealed class RegFile : IDisposable
                     continue;
                 }
 
-                //Dictionary<String, String> dictValues = NormalizeDictionary("^[\t ]*(\".+\"|@)=", item.Value, false);
-                Dictionary<string, string> dictValues = NormalizeValuesDictionary(item.Value);
-                retValue.Add(item.Key, dictValues);
+                ConcurrentDictionary<string, string> dictValues = NormalizeValuesDictionary(item.Value);
+                retValue.TryAdd(item.Key, dictValues);
             }
         }
         catch (Exception ex)
@@ -181,18 +182,20 @@ public sealed class RegFile : IDisposable
         return retValue;
     }
 
+    [GeneratedRegex("^[\t ]*\\[.+\\][\r\n]+", RegexOptions.Multiline, "en-US")]
+    private static partial Regex RegKeysRegex();
+
     /// <summary>
     ///     Creates a flat Dictionary using given search pattern
     /// </summary>
     /// <param name="content">The content string to be parsed</param>
     /// <returns>A Dictionary with retrieved keys and remaining content</returns>
-    internal static Dictionary<string, string> NormalizeKeysDictionary(string content)
+    internal static ConcurrentDictionary<string, string> NormalizeKeysDictionary(string content)
     {
-        const string searchPattern = "^[\t ]*\\[.+\\][\r\n]+";
-        MatchCollection matches = Regex.Matches(content, searchPattern, RegexOptions.Multiline);
+        MatchCollection matches = RegKeysRegex().Matches(content);
 
         ReadOnlySpan<char> input = content.AsSpan();
-        Dictionary<string, string> dictKeys = new();
+        ConcurrentDictionary<string, string> dictKeys = new();
 
         for (int i = 0; i < matches.Count; i++)
         {
@@ -202,8 +205,7 @@ public sealed class RegFile : IDisposable
             {
                 //Retrieve key
                 ReadOnlySpan<char> sKey = match.Value.AsSpan();
-                //change proposed by Jenda27
-                //if (sKey.EndsWith("\r\n")) sKey = sKey.Substring(0, sKey.Length - 2);
+
                 while (sKey.EndsWith("\r\n"))
                 {
                     sKey = sKey.Slice(0, sKey.Length - 2);
@@ -222,9 +224,7 @@ public sealed class RegFile : IDisposable
                 Match nextMatch = match.NextMatch();
                 int lengthIndex = (nextMatch.Success ? nextMatch.Index : content.Length) - startIndex;
                 ReadOnlySpan<char> sValue = input.Slice(startIndex, lengthIndex);
-                //Removing the ending CR
-                //change suggested by Jenda27
-                //if (sValue.EndsWith("\r\n")) sValue = sValue.Substring(0, sValue.Length - 2);
+
                 while (sValue.EndsWith("\r\n"))
                 {
                     sValue = sValue.Slice(0, sValue.Length - 2);
@@ -232,6 +232,7 @@ public sealed class RegFile : IDisposable
 
                 //fix for the double key names issue
                 //dictKeys.Add(sKey, sValue);
+                // TODO: see if this can be tuned further
                 if (dictKeys.ContainsKey(sKey.ToString()))
                 {
                     string key = dictKeys[sKey.ToString()];
@@ -246,7 +247,7 @@ public sealed class RegFile : IDisposable
                 }
                 else
                 {
-                    dictKeys.Add(sKey.ToString(), sValue.ToString());
+                    dictKeys.TryAdd(sKey.ToString(), sValue.ToString());
                 }
             }
             catch (Exception ex)
@@ -258,17 +259,19 @@ public sealed class RegFile : IDisposable
         return dictKeys;
     }
 
+    [GeneratedRegex(@"^[\t ]*("".+""|@)=(""[^""]*""|[^""]+)", RegexOptions.Multiline, "en-US")]
+    private static partial Regex RegValuesRegex();
+
     /// <summary>
     ///     Creates a flat Dictionary using given search pattern
     /// </summary>
     /// <param name="input">The content string to be parsed</param>
     /// <returns>A Dictionary with retrieved keys and remaining content</returns>
-    internal static Dictionary<string, string> NormalizeValuesDictionary(string input)
+    internal static ConcurrentDictionary<string, string> NormalizeValuesDictionary(string input)
     {
-        const string searchPattern = @"^[\t ]*("".+""|@)=(""[^""]*""|[^""]+)";
-        MatchCollection matches = Regex.Matches(input, searchPattern, RegexOptions.Multiline);
+        MatchCollection matches = RegValuesRegex().Matches(input);
 
-        Dictionary<string, string> dictKeys = new();
+        ConcurrentDictionary<string, string> dictKeys = new();
 
         for (int i = 0; i < matches.Count; i++)
         {
@@ -277,10 +280,10 @@ public sealed class RegFile : IDisposable
             try
             {
                 //Retrieve key
-                var sKey = match.Groups[1].Value.AsSpan();
+                ReadOnlySpan<char> sKey = match.Groups[1].Value.AsSpan();
 
                 //Retrieve value
-                var sValue = match.Groups[2].Value.AsSpan();
+                ReadOnlySpan<char> sValue = match.Groups[2].Value.AsSpan();
 
                 //Removing the ending CR
                 while (sKey.EndsWith("\r\n"))
@@ -309,7 +312,7 @@ public sealed class RegFile : IDisposable
                 }
                 else
                 {
-                    dictKeys.Add(sKey.ToString(), sValue.ToString());
+                    dictKeys.TryAdd(sKey.ToString(), sValue.ToString());
                 }
             }
             catch (Exception ex)
@@ -321,12 +324,15 @@ public sealed class RegFile : IDisposable
         return dictKeys;
     }
 
+    [GeneratedRegex("([ ]*(\r\n)*)REGEDIT4", RegexOptions.IgnoreCase | RegexOptions.Singleline, "en-US")]
+    private static partial Regex RegEncodingRegex();
+
     /// <summary>
     ///     Retrieves the encoding of the reg file, checking the word "REGEDIT4"
     /// </summary>
     private Encoding GetEncoding()
     {
-        return Regex.IsMatch(_content, "([ ]*(\r\n)*)REGEDIT4", RegexOptions.IgnoreCase | RegexOptions.Singleline)
+        return RegEncodingRegex().IsMatch(_content.AsSpan())
             ? Encoding.Default
             : Encoding.UTF8;
     }
