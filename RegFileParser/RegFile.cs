@@ -232,6 +232,7 @@ public sealed partial class RegFile
 
                 //fix for the double key names issue
                 //dictKeys.Add(sKey, sValue);
+                // TODO: see if this can be tuned further
                 if (dictKeys.ContainsKey(sKey.ToString()))
                 {
                     string key = dictKeys[sKey.ToString()];

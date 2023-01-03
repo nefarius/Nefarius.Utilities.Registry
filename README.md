@@ -23,3 +23,4 @@ Work in progress, use with care 🔥
 
 - [Registry Export File (.reg) Parser](https://www.codeproject.com/Tips/125573/Registry-Export-File-reg-Parser)
 - [SmartEnum](https://github.com/ardalis/SmartEnum)
+- [.NET regular expression source generators](https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-source-generators)
