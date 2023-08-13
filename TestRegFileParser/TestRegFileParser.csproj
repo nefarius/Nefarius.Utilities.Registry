@@ -10,6 +10,9 @@
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.4" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RegFileParser\Nefarius.Utilities.Registry.csproj" />

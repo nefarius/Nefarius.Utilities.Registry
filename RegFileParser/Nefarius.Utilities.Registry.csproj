@@ -13,6 +13,7 @@
     <PackageIcon>NSS-128x128.png</PackageIcon>
     <PackageIconUrl />
     <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
