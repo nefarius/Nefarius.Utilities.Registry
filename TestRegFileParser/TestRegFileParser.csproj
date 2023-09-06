@@ -13,6 +13,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\RegFileParser\Nefarius.Utilities.Registry.csproj"/>
+        <ProjectReference Include="..\src\Nefarius.Utilities.Registry.csproj"/>
     </ItemGroup>
 </Project>

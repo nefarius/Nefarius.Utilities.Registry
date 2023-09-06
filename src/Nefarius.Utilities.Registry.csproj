@@ -10,17 +10,8 @@
         <PackageLicenseExpression>CPOL-1.02</PackageLicenseExpression>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <PackageIcon>NSS-128x128.png</PackageIcon>
-        <PackageIconUrl/>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
-
-    <ItemGroup>
-        <None Include="..\assets\NSS-128x128.png">
-            <Pack>True</Pack>
-            <PackagePath></PackagePath>
-        </None>
-    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Ardalis.SmartEnum" Version="7.0.0"/>
