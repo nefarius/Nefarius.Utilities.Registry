@@ -6,12 +6,16 @@
         <Description>A class to read and parse reg files.</Description>
         <Copyright>Copyright © HFDev 2010, Benjamin Höglinger-Stelzer 2022</Copyright>
         <Version>2.0.0</Version>
-        <PackageLicenseExpression>CPOL-1.02</PackageLicenseExpression>
+        <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
+    <ItemGroup>
+        <None Include="$(SolutionDir)LICENSE.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+    
     <ItemGroup>
         <PackageReference Include="Ardalis.SmartEnum" Version="7.0.0"/>
         <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
