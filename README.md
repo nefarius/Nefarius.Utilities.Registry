@@ -18,7 +18,17 @@ A fast parser for Registry Export (.reg) Files.
 - Migrated string processing to using [Spans](https://learn.microsoft.com/en-us/dotnet/api/system.span-1?view=net-7.0) where applicable
 - Greatly improved parsing speed and reduced memory footprint
 - Added type-specific `RegValue` classes with pre-parsed `Value` property in the expected managed type (`string`, `byte[]`, etc.)
+<!--
+## Documentation
 
+[Link to API docs](docs/index.md).
+
+### Generating documentation
+
+- `dotnet publish -c Release`
+- `dotnet tool install -g XMLDoc2Markdown`
+- `xmldoc2md .\bin\net7.0\publish\Ardalis.SmartEnum.dll .\docs\`
+-->
 ## 3rd party credits
 
 - [Registry Export File (.reg) Parser](https://www.codeproject.com/Tips/125573/Registry-Export-File-reg-Parser)
