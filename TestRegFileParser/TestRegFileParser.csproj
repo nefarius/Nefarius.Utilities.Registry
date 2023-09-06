@@ -1,17 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <ProjectGuid>{F8708285-A12B-479D-BAFA-B0398396554E}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
-    <Company>HFDev</Company>
-    <Product>TestRegFileParser</Product>
-    <Copyright>Copyright © HFDev 2010</Copyright>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-    <LangVersion>latest</LangVersion>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+    <PropertyGroup>
+        <ProjectGuid>{F8708285-A12B-479D-BAFA-B0398396554E}</ProjectGuid>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <Company>HFDev</Company>
+        <Product>TestRegFileParser</Product>
+        <Copyright>Copyright © HFDev 2010</Copyright>
+        <OutputPath>bin\$(Configuration)\</OutputPath>
+        <LangVersion>latest</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\RegFileParser\Nefarius.Utilities.Registry.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\RegFileParser\Nefarius.Utilities.Registry.csproj"/>
+    </ItemGroup>
 </Project>

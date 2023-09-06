@@ -4,7 +4,7 @@
 
 > *This is a fork of the fantastic [Registry Export File (.reg) Parser](https://www.codeproject.com/Tips/125573/Registry-Export-File-reg-Parser) project by Henryk Filipowicz.*
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/nefarius/Nefarius.Utilities.Registry/dotnet.yml) ![Requirements](https://img.shields.io/badge/Requires-.NET%207-blue.svg)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/nefarius/Nefarius.Utilities.Registry/build.yml) ![Requirements](https://img.shields.io/badge/Requires-.NET%207-blue.svg) [![Nuget](https://img.shields.io/nuget/v/Nefarius.Utilities.Registry)](https://www.nuget.org/packages/Nefarius.Utilities.Registry/) [![Nuget](https://img.shields.io/nuget/dt/Nefarius.Utilities.Registry)](https://www.nuget.org/packages/Nefarius.Utilities.Registry/)
 
 A fast parser for Registry Export (.reg) Files.
 
