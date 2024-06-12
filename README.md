@@ -1,6 +1,4 @@
-<img src="assets/NSS-128x128.png" align="right" />
-
-# Nefarius.Utilities.Registry
+# <img src="assets/NSS-128x128.png" align="left" />Nefarius.Utilities.Registry
 
 > *This is a fork of the fantastic [Registry Export File (.reg) Parser](https://www.codeproject.com/Tips/125573/Registry-Export-File-reg-Parser) project by Henryk Filipowicz.*
 
