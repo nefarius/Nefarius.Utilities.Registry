@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net7.0;net8.0</TargetFramework>
         <Company>HFDev</Company>
         <Product>Registry Export File (.reg) Parser</Product>
         <Description>A class to read and parse reg files.</Description>

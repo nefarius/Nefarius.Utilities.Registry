@@ -1,10 +1,10 @@
 # <img src="assets/NSS-128x128.png" align="left" />Nefarius.Utilities.Registry
 
-> *This is a fork of the fantastic [Registry Export File (.reg) Parser](https://www.codeproject.com/Tips/125573/Registry-Export-File-reg-Parser) project by Henryk Filipowicz.*
-
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/nefarius/Nefarius.Utilities.Registry/build.yml) ![Requirements](https://img.shields.io/badge/Requires-.NET%207-blue.svg) [![Nuget](https://img.shields.io/nuget/v/Nefarius.Utilities.Registry)](https://www.nuget.org/packages/Nefarius.Utilities.Registry/) [![Nuget](https://img.shields.io/nuget/dt/Nefarius.Utilities.Registry)](https://www.nuget.org/packages/Nefarius.Utilities.Registry/)
 
 A fast parser for Registry Export (.reg) Files.
+
+> *This is a fork of the fantastic [Registry Export File (.reg) Parser](https://www.codeproject.com/Tips/125573/Registry-Export-File-reg-Parser) project by Henryk Filipowicz.*
 
 ## Changes of this fork
 
@@ -16,17 +16,17 @@ A fast parser for Registry Export (.reg) Files.
 - Migrated string processing to using [Spans](https://learn.microsoft.com/en-us/dotnet/api/system.span-1?view=net-7.0) where applicable
 - Greatly improved parsing speed and reduced memory footprint
 - Added type-specific `RegValue` classes with pre-parsed `Value` property in the expected managed type (`string`, `byte[]`, etc.)
-<!--
+
 ## Documentation
 
 [Link to API docs](docs/index.md).
 
 ### Generating documentation
 
-- `dotnet publish -c Release`
-- `dotnet tool install -g XMLDoc2Markdown`
-- `xmldoc2md .\bin\net7.0\publish\Ardalis.SmartEnum.dll .\docs\`
--->
+- `dotnet build -c:Release`
+- `dotnet tool install --global Nefarius.Tools.XMLDoc2Markdown`
+- `xmldoc2md .\bin\net8.0\Nefarius.Utilities.Registry.dll .\docs\`
+
 ## 3rd party credits
 
 - [Registry Export File (.reg) Parser](https://www.codeproject.com/Tips/125573/Registry-Export-File-reg-Parser)
