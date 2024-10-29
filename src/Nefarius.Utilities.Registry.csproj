@@ -1,31 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net7.0;net8.0</TargetFramework>
-        <Company>HFDev</Company>
+        <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+        <Company>HFDev, Nefarius Software Solutions e.U.</Company>
         <Product>Registry Export File (.reg) Parser</Product>
         <Description>A class to read and parse reg files.</Description>
-        <Copyright>Copyright © HFDev 2010, Benjamin Höglinger-Stelzer 2022</Copyright>
+        <Copyright>Copyright © HFDev 2010, Benjamin Höglinger-Stelzer 2022-2024</Copyright>
         <Version>2.0.0</Version>
-        <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <LangVersion>latest</LangVersion>
+        <PackageLicenseExpression>CPOL-1.02</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/nefarius/Nefarius.Utilities.Registry</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/nefarius/Nefarius.Utilities.Registry</PackageProjectUrl>
     </PropertyGroup>
-
-    <ItemGroup>
-        <None Include="$(SolutionDir)LICENSE.md" Pack="true" PackagePath="\"/>
-    </ItemGroup>
-    
-    <ItemGroup>
-        <PackageReference Include="Ardalis.SmartEnum" Version="7.0.0"/>
-        <PackageReference Include="GitVersion.MsBuild" Version="5.12.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
 
     <PropertyGroup>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <MinVerTagPrefix>v</MinVerTagPrefix>
     </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Ardalis.SmartEnum" Version="8.1.0" />
+        <PackageReference Include="MinVer" Version="6.0.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 </Project>
