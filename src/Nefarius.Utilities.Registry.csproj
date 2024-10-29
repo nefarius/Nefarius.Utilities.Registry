@@ -6,7 +6,7 @@
         <Description>A class to read and parse reg files.</Description>
         <Copyright>Copyright © HFDev 2010, Benjamin Höglinger-Stelzer 2022-2024</Copyright>
         <Version>2.0.0</Version>
-        <PackageLicenseExpression>CPOL-1.02</PackageLicenseExpression>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/nefarius/Nefarius.Utilities.Registry</RepositoryUrl>
         <PackageProjectUrl>https://github.com/nefarius/Nefarius.Utilities.Registry</PackageProjectUrl>
     </PropertyGroup>
