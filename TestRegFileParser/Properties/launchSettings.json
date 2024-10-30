@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "TestRegFileParser": {
-      "commandName": "Project",
-      "commandLineArgs": "\"F:\\Downloads\\CurrentControlSet_full_export.reg\""
-    }
-  }
-}
