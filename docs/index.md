@@ -4,8 +4,6 @@
 
 - [RegFile](./nefarius.utilities.registry.regfile.md)
 
-- [RegFileException](./nefarius.utilities.registry.regfileexception.md)
-
 - [RegValue](./nefarius.utilities.registry.regvalue.md)
 
 - [RegValueBinary](./nefarius.utilities.registry.regvaluebinary.md)
@@ -21,3 +19,7 @@
 - [RegValueSz](./nefarius.utilities.registry.regvaluesz.md)
 
 - [RegValueType](./nefarius.utilities.registry.regvaluetype.md)
+
+## Namespace Nefarius.Utilities.Registry.Exceptions
+
+- [RegFileException](./nefarius.utilities.registry.exceptions.regfileexception.md)
