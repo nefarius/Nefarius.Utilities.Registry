@@ -13,6 +13,7 @@ namespace Nefarius.Utilities.Registry;
 /// <summary>
 ///     A <see cref="RegFile" /> exception.
 /// </summary>
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public sealed class RegFileException : Exception
 {
     internal RegFileException(string message) : base(message)
@@ -32,6 +33,7 @@ public sealed class RegFileException : Exception
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
 [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 [SuppressMessage("ReSharper", "ReplaceSliceWithRangeIndexer")]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public sealed partial class RegFile
 {
     private readonly bool _isStreamOwned;
@@ -75,7 +77,7 @@ public sealed partial class RegFile
     /// </summary>
     private void Read()
     {
-        using StreamReader sr = new(_stream);
+        StreamReader sr = new(_stream, leaveOpen: !_isStreamOwned);
 
         _content = sr.ReadToEnd();
 
@@ -217,7 +219,7 @@ public sealed partial class RegFile
                 }
 
                 sKey = sKey.StripeBraces();
-                sKey = sKey == "@" ? "" : sKey.StripLeadingChars("\"");
+                sKey = sKey is "@" ? "" : sKey.StripLeadingChars("\"");
 
                 //Retrieve value
                 int startIndex = match.Index + match.Length;
@@ -235,11 +237,10 @@ public sealed partial class RegFile
                 //fix for the double key names issue
                 //dictKeys.Add(sKey, sValue);
                 // TODO: see if this can be tuned further
-                if (dictKeys.ContainsKey(dictKey))
+                if (dictKeys.TryGetValue(dictKey, out string value))
                 {
-                    string key = dictKeys[dictKey];
-                    StringBuilder sb = new(key);
-                    if (!key.EndsWith(Environment.NewLine))
+                    StringBuilder sb = new(value);
+                    if (!value.EndsWith(Environment.NewLine))
                     {
                         sb.AppendLine();
                     }
@@ -293,7 +294,7 @@ public sealed partial class RegFile
                     sKey = sKey.Slice(0, sKey.Length - 2);
                 }
 
-                sKey = sKey == "@" ? "" : sKey.StripLeadingChars("\"");
+                sKey = sKey is "@" ? "" : sKey.StripLeadingChars("\"");
 
                 while (sValue.EndsWith("\r\n"))
                 {
@@ -303,11 +304,10 @@ public sealed partial class RegFile
                 var dictKey = sKey.ToString();
 
                 // TODO: can this be tuned further?
-                if (dictKeys.ContainsKey(dictKey))
+                if (dictKeys.TryGetValue(dictKey, out string value))
                 {
-                    string key = dictKeys[dictKey];
-                    StringBuilder sb = new(key);
-                    if (!key.EndsWith(Environment.NewLine))
+                    StringBuilder sb = new(value);
+                    if (!value.EndsWith(Environment.NewLine))
                     {
                         sb.AppendLine();
                     }
