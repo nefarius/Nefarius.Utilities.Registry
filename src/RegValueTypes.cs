@@ -12,6 +12,7 @@ namespace Nefarius.Utilities.Registry;
 /// </summary>
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public sealed class RegValueType : SmartEnum<RegValueType>
 {
     /// <summary>
@@ -81,8 +82,8 @@ public sealed class RegValueType : SmartEnum<RegValueType>
     /// </summary>
     public static readonly RegValueType Sz = new("REG_SZ", 1);
 
-    private static readonly List<RegValueType> AllTypes = new()
-    {
+    private static readonly List<RegValueType> AllTypes =
+    [
         ResourceRequirementsList,
         FullResourceDescriptor,
         ResourceList,
@@ -94,7 +95,7 @@ public sealed class RegValueType : SmartEnum<RegValueType>
         None,
         Binary,
         Sz
-    };
+    ];
 
     private RegValueType(string name, int value) : base(name, value)
     {
@@ -103,16 +104,16 @@ public sealed class RegValueType : SmartEnum<RegValueType>
     /// <summary>
     ///     Gets the encoded string for the type.
     /// </summary>
-    public string EncodedType { get; private set; }
+    public string EncodedType { get; private init; }
 
     /// <summary>
     ///     Retrieves a <see cref="RegValueType" /> from an encoded value string.
     /// </summary>
     /// <param name="encodedType">The encoded value string from the parser.</param>
     /// <returns>A <see cref="RegValueType" /> or null.</returns>
-    public static RegValueType FromEncodedType(string encodedType)
+    public static RegValueType? FromEncodedType(string encodedType)
     {
-        var type = AllTypes.FirstOrDefault(t => !string.IsNullOrEmpty(t.EncodedType) && encodedType
+        RegValueType type = AllTypes.FirstOrDefault(t => !string.IsNullOrEmpty(t.EncodedType) && encodedType
             .TrimStart()
             .StartsWith(t.EncodedType, StringComparison.OrdinalIgnoreCase)
         );

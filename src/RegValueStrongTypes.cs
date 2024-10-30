@@ -12,6 +12,7 @@ namespace Nefarius.Utilities.Registry;
 /// </summary>
 [SuppressMessage("ReSharper", "ReplaceSliceWithRangeIndexer")]
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public sealed class RegValueDword : RegValue
 {
     internal RegValueDword(string keyName, string valueName, RegValueType valueType, string valueData,
@@ -30,6 +31,7 @@ public sealed class RegValueDword : RegValue
 /// </summary>
 [SuppressMessage("ReSharper", "ReplaceSliceWithRangeIndexer")]
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public sealed class RegValueQword : RegValue
 {
     internal RegValueQword(string keyName, string valueName, RegValueType valueType, string valueData,
@@ -48,6 +50,7 @@ public sealed class RegValueQword : RegValue
 /// </summary>
 [SuppressMessage("ReSharper", "ReplaceSliceWithRangeIndexer")]
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public sealed class RegValueBinary : RegValue
 {
     internal RegValueBinary(string keyName, string valueName, RegValueType valueType, string valueData,
@@ -71,6 +74,7 @@ public sealed class RegValueBinary : RegValue
 /// </summary>
 [SuppressMessage("ReSharper", "ReplaceSliceWithRangeIndexer")]
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public sealed class RegValueMultiSz : RegValue
 {
     internal RegValueMultiSz(string keyName, string valueName, RegValueType valueType, string valueData,
@@ -115,6 +119,7 @@ public sealed class RegValueMultiSz : RegValue
 /// </summary>
 [SuppressMessage("ReSharper", "ReplaceSliceWithRangeIndexer")]
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public sealed class RegValueSz : RegValue
 {
     internal RegValueSz(string keyName, string valueName, RegValueType valueType, string valueData,
@@ -128,6 +133,7 @@ public sealed class RegValueSz : RegValue
 /// </summary>
 [SuppressMessage("ReSharper", "ReplaceSliceWithRangeIndexer")]
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public sealed class RegValueNone : RegValue
 {
     internal RegValueNone(string keyName, string valueName, RegValueType valueType, string valueData,
