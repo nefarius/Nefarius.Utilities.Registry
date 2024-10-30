@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /.idea
 software_export.reg
+/Dumps
+*.reg
