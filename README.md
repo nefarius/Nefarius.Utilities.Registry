@@ -1,6 +1,6 @@
 # <img src="assets/NSS-128x128.png" align="left" />Nefarius.Utilities.Registry
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/nefarius/Nefarius.Utilities.Registry/build.yml) ![Requirements](https://img.shields.io/badge/Requires-.NET%207-blue.svg) [![Nuget](https://img.shields.io/nuget/v/Nefarius.Utilities.Registry)](https://www.nuget.org/packages/Nefarius.Utilities.Registry/) [![Nuget](https://img.shields.io/nuget/dt/Nefarius.Utilities.Registry)](https://www.nuget.org/packages/Nefarius.Utilities.Registry/)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/nefarius/Nefarius.Utilities.Registry/build.yml) ![Requirements](https://img.shields.io/badge/Requires-.NET%207%2F8-blue.svg) [![Nuget](https://img.shields.io/nuget/v/Nefarius.Utilities.Registry)](https://www.nuget.org/packages/Nefarius.Utilities.Registry/) [![Nuget](https://img.shields.io/nuget/dt/Nefarius.Utilities.Registry)](https://www.nuget.org/packages/Nefarius.Utilities.Registry/)
 
 A fast parser for Registry Export (.reg) Files.
 
