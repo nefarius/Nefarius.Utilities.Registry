@@ -111,7 +111,7 @@ public sealed class RegValueType : SmartEnum<RegValueType>
     /// </summary>
     /// <param name="encodedType">The encoded value string from the parser.</param>
     /// <returns>A <see cref="RegValueType" /> or null.</returns>
-    public static RegValueType? FromEncodedType(string encodedType)
+    public static RegValueType FromEncodedType(string encodedType)
     {
         RegValueType type = AllTypes.FirstOrDefault(t => !string.IsNullOrEmpty(t.EncodedType) && encodedType
             .TrimStart()

@@ -3,14 +3,14 @@ using System.Text.RegularExpressions;
 
 namespace Nefarius.Utilities.Registry.Util;
 
-internal static class StringExtensions
+internal static partial class StringExtensions
 {
     /// <summary>
     ///     Removes the ending backslashes from the given string
     /// </summary>
     internal static string StripContinueChar(this string line)
     {
-        return Regex.Replace(line, "\\\\\r\n[ ]*", string.Empty);
+        return StripContinueCharRegex().Replace(line, string.Empty);
     }
 
     /// <summary>
@@ -50,4 +50,7 @@ internal static class StringExtensions
 
         return value;
     }
+
+    [GeneratedRegex("\\\\\r\n[ ]*")]
+    private static partial Regex StripContinueCharRegex();
 }
