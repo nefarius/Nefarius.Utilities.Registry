@@ -324,6 +324,6 @@ public sealed partial class RegFile
     {
         return RegEncodingRegex().IsMatch(_content.AsSpan())
             ? Encoding.Default
-            : Encoding.UTF8;
+            : Encoding.Unicode;
     }
 }
