@@ -6,24 +6,10 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using Nefarius.Utilities.Registry.Exceptions;
 using Nefarius.Utilities.Registry.Util;
 
 namespace Nefarius.Utilities.Registry;
-
-/// <summary>
-///     A <see cref="RegFile" /> exception.
-/// </summary>
-[SuppressMessage("ReSharper", "InconsistentNaming")]
-public sealed class RegFileException : Exception
-{
-    internal RegFileException(string message) : base(message)
-    {
-    }
-
-    internal RegFileException(string message, Exception inner) : base(message, inner)
-    {
-    }
-}
 
 /// <summary>
 ///     The main reg file parsing class. Reads the given reg file and stores the content as a Dictionary of registry keys
@@ -77,13 +63,12 @@ public sealed partial class RegFile
     /// </summary>
     private void Read()
     {
-        StreamReader sr = new(_stream, leaveOpen: !_isStreamOwned);
+        using StreamReader sr = new(_stream, leaveOpen: !_isStreamOwned);
 
         _content = sr.ReadToEnd();
 
         if (_isStreamOwned)
         {
-            sr.Dispose();
             _stream.Dispose();
         }
 
