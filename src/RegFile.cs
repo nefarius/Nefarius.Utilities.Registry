@@ -232,7 +232,7 @@ public sealed partial class RegFile
                     sValue = sValue.Slice(0, sValue.Length - 2);
                 }
 
-                var dictKey = sKey.ToString();
+                string dictKey = sKey.ToString();
 
                 //fix for the double key names issue
                 //dictKeys.Add(sKey, sValue);
@@ -301,7 +301,7 @@ public sealed partial class RegFile
                     sValue = sValue.Slice(0, sValue.Length - 2);
                 }
 
-                var dictKey = sKey.ToString();
+                string dictKey = sKey.ToString();
 
                 // TODO: can this be tuned further?
                 if (dictKeys.TryGetValue(dictKey, out string value))
