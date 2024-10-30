@@ -15,6 +15,7 @@ namespace Nefarius.Utilities.Registry;
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
 [SuppressMessage("ReSharper", "ReplaceSliceWithRangeIndexer")]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public class RegValue
 {
     private const string Hklm = "HKEY_LOCAL_MACHINE";
