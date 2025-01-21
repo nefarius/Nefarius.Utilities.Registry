@@ -322,7 +322,7 @@ public sealed partial class RegFile
     /// </summary>
     private Encoding GetEncoding()
     {
-        return RegEncodingRegex().IsMatch(_content.AsSpan())
+        return RegEncodingRegex().IsMatch(_content.AsSpan().Slice(0, 20))
             ? Encoding.Default
             : Encoding.Unicode;
     }
