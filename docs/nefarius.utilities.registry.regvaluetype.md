@@ -5,11 +5,11 @@ Namespace: Nefarius.Utilities.Registry
 Represents possible data types of a [RegValue](./nefarius.utilities.registry.regvalue.md).
 
 ```csharp
-public sealed class RegValueType : Ardalis.SmartEnum.SmartEnum`1[[Nefarius.Utilities.Registry.RegValueType, Nefarius.Utilities.Registry, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], Ardalis.SmartEnum.ISmartEnum, System.IEquatable`1[[Ardalis.SmartEnum.SmartEnum`2[[Nefarius.Utilities.Registry.RegValueType, Nefarius.Utilities.Registry, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], Ardalis.SmartEnum, Version=8.2.0.0, Culture=neutral, PublicKeyToken=null]], System.IComparable`1[[Ardalis.SmartEnum.SmartEnum`2[[Nefarius.Utilities.Registry.RegValueType, Nefarius.Utilities.Registry, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Int32, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], Ardalis.SmartEnum, Version=8.2.0.0, Culture=neutral, PublicKeyToken=null]]
+public sealed class RegValueType : Ardalis.SmartEnum.SmartEnum<Nefarius.Utilities.Registry.RegValueType>, Ardalis.SmartEnum.ISmartEnum, System.IEquatable<Ardalis.SmartEnum.SmartEnum<Nefarius.Utilities.Registry.RegValueType, System.Int32>>, System.IComparable<Ardalis.SmartEnum.SmartEnum<Nefarius.Utilities.Registry.RegValueType, System.Int32>>
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → SmartEnum&lt;RegValueType, Int32&gt; → SmartEnum&lt;RegValueType&gt; → [RegValueType](./nefarius.utilities.registry.regvaluetype.md)<br>
-Implements ISmartEnum, [IEquatable&lt;SmartEnum&lt;RegValueType, Int32&gt;&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.iequatable-1), [IComparable&lt;SmartEnum&lt;RegValueType, Int32&gt;&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.icomparable-1)
+Inheritance [Object](https://learn.microsoft.com/dotnet/api/system.object) → SmartEnum<[RegValueType](./nefarius.utilities.registry.regvaluetype.md), [Int32](https://learn.microsoft.com/dotnet/api/system.int32)> → SmartEnum<[RegValueType](./nefarius.utilities.registry.regvaluetype.md)> → [RegValueType](./nefarius.utilities.registry.regvaluetype.md)<br>
+Implements ISmartEnum, [IEquatable](https://learn.microsoft.com/dotnet/api/system.iequatable-1)<SmartEnum<[RegValueType](./nefarius.utilities.registry.regvaluetype.md), [Int32](https://learn.microsoft.com/dotnet/api/system.int32)>>, [IComparable](https://learn.microsoft.com/dotnet/api/system.icomparable-1)<SmartEnum<[RegValueType](./nefarius.utilities.registry.regvaluetype.md), [Int32](https://learn.microsoft.com/dotnet/api/system.int32)>>
 
 ## Fields
 
@@ -123,7 +123,7 @@ public string EncodedType { get; private set; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-name"/>**Name**
 
@@ -133,7 +133,7 @@ public string Name { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-value"/>**Value**
 
@@ -143,7 +143,7 @@ public int Value { get; }
 
 #### Property Value
 
-[Int32](https://docs.microsoft.com/en-us/dotnet/api/system.int32)<br>
+[Int32](https://learn.microsoft.com/dotnet/api/system.int32)<br>
 
 ## Methods
 
@@ -157,7 +157,7 @@ public static RegValueType FromEncodedType(string encodedType)
 
 #### Parameters
 
-`encodedType` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+`encodedType` [String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 The encoded value string from the parser.
 
 #### Returns

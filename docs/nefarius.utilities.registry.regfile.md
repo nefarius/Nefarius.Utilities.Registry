@@ -9,7 +9,7 @@ The main reg file parsing class. Reads the given reg file and stores the content
 public sealed class RegFile
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [RegFile](./nefarius.utilities.registry.regfile.md)
+Inheritance [Object](https://learn.microsoft.com/dotnet/api/system.object) → [RegFile](./nefarius.utilities.registry.regfile.md)
 
 ## Properties
 
@@ -23,7 +23,7 @@ public Encoding FileEncoding { get; private set; }
 
 #### Property Value
 
-[Encoding](https://docs.microsoft.com/en-us/dotnet/api/system.text.encoding)<br>
+[Encoding](https://learn.microsoft.com/dotnet/api/system.text.encoding)<br>
 
 ### <a id="properties-regvalues"/>**RegValues**
 
@@ -35,7 +35,7 @@ public Dictionary<String, Dictionary<String, RegValue>> RegValues { get; }
 
 #### Property Value
 
-[Dictionary&lt;String, Dictionary&lt;String, RegValue&gt;&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2)<br>
+[Dictionary](https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2)<[String](https://learn.microsoft.com/dotnet/api/system.string), [Dictionary](https://learn.microsoft.com/dotnet/api/system.collections.generic.dictionary-2)<[String](https://learn.microsoft.com/dotnet/api/system.string), [RegValue](./nefarius.utilities.registry.regvalue.md)>><br>
 
 ## Constructors
 
@@ -49,7 +49,7 @@ public RegFile(Stream stream)
 
 #### Parameters
 
-`stream` [Stream](https://docs.microsoft.com/en-us/dotnet/api/system.io.stream)<br>
+`stream` [Stream](https://learn.microsoft.com/dotnet/api/system.io.stream)<br>
 The stream to read from.
 
 **Remarks:**
@@ -66,7 +66,7 @@ public RegFile(string regFileName)
 
 #### Parameters
 
-`regFileName` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+`regFileName` [String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 The full path to the file to parse.
 
 ## Methods
@@ -81,7 +81,7 @@ internal static ConcurrentDictionary<String, String> NormalizeKeysDictionary(str
 
 #### Parameters
 
-`content` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+`content` [String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 The content string to be parsed
 
 #### Returns
@@ -98,7 +98,7 @@ internal static ConcurrentDictionary<String, String> NormalizeValuesDictionary(s
 
 #### Parameters
 
-`input` [String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+`input` [String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 The content string to be parsed
 
 #### Returns

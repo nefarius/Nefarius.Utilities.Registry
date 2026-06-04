@@ -8,7 +8,7 @@ A 64-bit number.
 public sealed class RegValueQword : RegValue
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [RegValue](./nefarius.utilities.registry.regvalue.md) → [RegValueQword](./nefarius.utilities.registry.regvalueqword.md)
+Inheritance [Object](https://learn.microsoft.com/dotnet/api/system.object) → [RegValue](./nefarius.utilities.registry.regvalue.md) → [RegValueQword](./nefarius.utilities.registry.regvalueqword.md)
 
 ## Properties
 
@@ -22,7 +22,7 @@ public Encoding Encoding { get; }
 
 #### Property Value
 
-[Encoding](https://docs.microsoft.com/en-us/dotnet/api/system.text.encoding)<br>
+[Encoding](https://learn.microsoft.com/dotnet/api/system.text.encoding)<br>
 
 ### <a id="properties-entry"/>**Entry**
 
@@ -34,7 +34,7 @@ public string Entry { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-parentkey"/>**ParentKey**
 
@@ -46,7 +46,7 @@ public string ParentKey { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-parentkeywithoutroot"/>**ParentKeyWithoutRoot**
 
@@ -58,7 +58,7 @@ public string ParentKeyWithoutRoot { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-root"/>**Root**
 
@@ -70,7 +70,7 @@ public string Root { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-type"/>**Type**
 
@@ -94,7 +94,7 @@ public long Value { get; }
 
 #### Property Value
 
-[Int64](https://docs.microsoft.com/en-us/dotnet/api/system.int64)<br>
+[Int64](https://learn.microsoft.com/dotnet/api/system.int64)<br>
 
 ### <a id="properties-value"/>**Value**
 
@@ -106,4 +106,4 @@ public string Value { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>

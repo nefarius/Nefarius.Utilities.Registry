@@ -8,7 +8,7 @@ Binary data in any form.
 public sealed class RegValueBinary : RegValue
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [RegValue](./nefarius.utilities.registry.regvalue.md) → [RegValueBinary](./nefarius.utilities.registry.regvaluebinary.md)
+Inheritance [Object](https://learn.microsoft.com/dotnet/api/system.object) → [RegValue](./nefarius.utilities.registry.regvalue.md) → [RegValueBinary](./nefarius.utilities.registry.regvaluebinary.md)
 
 ## Properties
 
@@ -22,7 +22,7 @@ public Encoding Encoding { get; }
 
 #### Property Value
 
-[Encoding](https://docs.microsoft.com/en-us/dotnet/api/system.text.encoding)<br>
+[Encoding](https://learn.microsoft.com/dotnet/api/system.text.encoding)<br>
 
 ### <a id="properties-entry"/>**Entry**
 
@@ -34,7 +34,7 @@ public string Entry { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-parentkey"/>**ParentKey**
 
@@ -46,7 +46,7 @@ public string ParentKey { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-parentkeywithoutroot"/>**ParentKeyWithoutRoot**
 
@@ -58,7 +58,7 @@ public string ParentKeyWithoutRoot { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-root"/>**Root**
 
@@ -70,7 +70,7 @@ public string Root { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-type"/>**Type**
 
@@ -94,7 +94,7 @@ public IEnumerable<Byte> Value { get; }
 
 #### Property Value
 
-[IEnumerable&lt;Byte&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1)<br>
+[IEnumerable](https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1)<[Byte](https://learn.microsoft.com/dotnet/api/system.byte)><br>
 
 ### <a id="properties-value"/>**Value**
 
@@ -106,4 +106,4 @@ public string Value { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>

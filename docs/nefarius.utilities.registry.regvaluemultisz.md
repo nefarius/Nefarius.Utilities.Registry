@@ -11,7 +11,7 @@ A sequence of null-terminated strings, terminated by an empty string (\0). The f
 public sealed class RegValueMultiSz : RegValue
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [RegValue](./nefarius.utilities.registry.regvalue.md) → [RegValueMultiSz](./nefarius.utilities.registry.regvaluemultisz.md)
+Inheritance [Object](https://learn.microsoft.com/dotnet/api/system.object) → [RegValue](./nefarius.utilities.registry.regvalue.md) → [RegValueMultiSz](./nefarius.utilities.registry.regvaluemultisz.md)
 
 ## Properties
 
@@ -25,7 +25,7 @@ public Encoding Encoding { get; }
 
 #### Property Value
 
-[Encoding](https://docs.microsoft.com/en-us/dotnet/api/system.text.encoding)<br>
+[Encoding](https://learn.microsoft.com/dotnet/api/system.text.encoding)<br>
 
 ### <a id="properties-entry"/>**Entry**
 
@@ -37,7 +37,7 @@ public string Entry { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-parentkey"/>**ParentKey**
 
@@ -49,7 +49,7 @@ public string ParentKey { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-parentkeywithoutroot"/>**ParentKeyWithoutRoot**
 
@@ -61,7 +61,7 @@ public string ParentKeyWithoutRoot { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-root"/>**Root**
 
@@ -73,7 +73,7 @@ public string Root { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-type"/>**Type**
 
@@ -100,7 +100,7 @@ public IEnumerable<String> Value { get; }
 
 #### Property Value
 
-[IEnumerable&lt;String&gt;](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.ienumerable-1)<br>
+[IEnumerable](https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1)<[String](https://learn.microsoft.com/dotnet/api/system.string)><br>
 
 ### <a id="properties-value"/>**Value**
 
@@ -112,4 +112,4 @@ public string Value { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>

@@ -9,7 +9,7 @@ A null-terminated string. This will be either a Unicode or an ANSI string, depen
 public sealed class RegValueSz : RegValue
 ```
 
-Inheritance [Object](https://docs.microsoft.com/en-us/dotnet/api/system.object) → [RegValue](./nefarius.utilities.registry.regvalue.md) → [RegValueSz](./nefarius.utilities.registry.regvaluesz.md)
+Inheritance [Object](https://learn.microsoft.com/dotnet/api/system.object) → [RegValue](./nefarius.utilities.registry.regvalue.md) → [RegValueSz](./nefarius.utilities.registry.regvaluesz.md)
 
 ## Properties
 
@@ -23,7 +23,7 @@ public Encoding Encoding { get; }
 
 #### Property Value
 
-[Encoding](https://docs.microsoft.com/en-us/dotnet/api/system.text.encoding)<br>
+[Encoding](https://learn.microsoft.com/dotnet/api/system.text.encoding)<br>
 
 ### <a id="properties-entry"/>**Entry**
 
@@ -35,7 +35,7 @@ public string Entry { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-parentkey"/>**ParentKey**
 
@@ -47,7 +47,7 @@ public string ParentKey { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-parentkeywithoutroot"/>**ParentKeyWithoutRoot**
 
@@ -59,7 +59,7 @@ public string ParentKeyWithoutRoot { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-root"/>**Root**
 
@@ -71,7 +71,7 @@ public string Root { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
 
 ### <a id="properties-type"/>**Type**
 
@@ -95,4 +95,4 @@ public string Value { get; }
 
 #### Property Value
 
-[String](https://docs.microsoft.com/en-us/dotnet/api/system.string)<br>
+[String](https://learn.microsoft.com/dotnet/api/system.string)<br>
